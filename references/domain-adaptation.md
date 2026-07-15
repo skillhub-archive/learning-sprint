@@ -27,7 +27,11 @@ practice + a way to check (a rubric, a recording, a reference performance).
 **Onboard that environment from zero in Session 1.** Do not assume the learner
 already has it: Session 1's first task walks them through getting it (download /
 install / sign in), opening it, and where to do the thing, recommending one
-friendliest path and deprioritizing alternatives. See Step 4 in `SKILL.md`.
+friendliest path and deprioritizing alternatives. See Step 4 in `SKILL.md`. If a
+later session changes the shared practice state (adds data, changes a file), offer a
+from-zero rebuild right under the change script, above the "confirm it worked" step,
+so a learner who lost the environment can catch up first (see Part 1 in
+`workbook-template.md`).
 
 ## 2. Translate each drill type
 
@@ -40,8 +44,9 @@ The general form of every part, and how it maps across domains:
   - Music theory: name the chord/interval before revealing.
   - Chess: predict the best move / the consequence of a move.
   - Vary the answer type across drills (a single value, a count, the full set of
-    results in any order, or results in a specific order), not one shape repeated;
-    see the drill-answer-variety rule in `editorial-rules.md`.
+    results in any order, or results in a specific order), AND vary the cognitive
+    task (read a whole result, operate on a subset, read one group, combine steps),
+    not one shape repeated; see the drill-answer-variety rule in `editorial-rules.md`.
 
 - **Part 3 "Arrange & fill"** = *order the steps / fill the gap* (the reading→doing
   bridge).

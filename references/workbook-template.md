@@ -38,6 +38,14 @@ examples with expected results. Cover the genuine high-leverage content, go deep
 than a syntax tour. The final "Your turn" of the session should BE the session
 milestone task.
 
+When a session mutates the shared practice data (adds a column or rows via a
+paste-and-run script) or otherwise needs a from-zero rebuild, put that full-setup
+fallback (a collapsible "lost your environment? start fresh" block) **directly under
+the primary setup script and above the "now confirm the result" step**, not after
+it. The fallback is an *alternative* to the primary script (it rebuilds everything
+in one go), so a learner who lost their environment needs it before being told to
+verify a result they cannot yet produce.
+
 ## Part 2 — Predict / trace (retrieval on the mental model)
 
 Show an artifact of the skill (code snippet, a formula, a sentence to translate, a
@@ -55,7 +63,11 @@ always reveal *why*.
   `toks(s) = s.toLowerCase().trim().split(/[\s,.;]+/).filter(Boolean)` then compare
   sorted (set) or in order (seq). Ask `value` when one result comes back, `set` when
   several do, `count` only when the count is the lesson, `seq` only when the result
-  has a defined order. See the drill-answer-variety rule in `editorial-rules.md`.
+  has a defined order. Also vary the **cognitive task**, not just the answer type:
+  ramp from reading one whole result, to operating on a filtered subset, to reading
+  one group out of a grouped result, to combining several clauses, rather than
+  restating the same move with a different function. See the drill-answer-variety
+  rule in `editorial-rules.md`.
 - Include at least one **"trace it"** item that forces step-by-step mental
   execution (e.g. variable values after each line).
 - For code subjects, add a **"watch it run" link to Python Tutor**

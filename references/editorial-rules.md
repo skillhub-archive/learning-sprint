@@ -7,10 +7,11 @@ trust (an unfair grade, a hint that leaks the answer, a glyph that teaches the
 wrong character to type). Rules 1-14 came from Session 1, rule 15 from Session 2,
 rule 16 from Session 3, rules 17-18 from Session 4, rule 19 from Session 6 (then
 run back across Sessions 1-5), rule 20 from a cross-session polish pass over all
-ten sessions. Later always-true refinements (the drill-answer-variety rule below,
-plus the level-0 environment-onboarding guidance in `SKILL.md` and the Reveal-gating
-clause added to rule 20) came from building a second sprint in another subject
-(SQL, Sessions 1-2).
+ten sessions. Later always-true refinements (the drill-answer-variety and drill-task-variety
+rules below, the syntax-placeholder clause in rule 1, the ask-must-not-leak clause
+in rule 8, plus the level-0 environment-onboarding guidance in `SKILL.md` and the
+Reveal-gating clause added to rule 20) came from building a second sprint in another
+subject (SQL, Sessions 1-3).
 
 **A session is NOT "done" until it passes every rule below.** Run this checklist
 against each session artifact before you publish it and before you tell the user
@@ -23,7 +24,15 @@ past it.
 
 **1. Never drop a term without unpacking it.** Define jargon (e.g. "escape
 sequence", "argument", "immutable") the first time it appears, in prose, before or
-as you use it.
+as you use it. This includes **syntax placeholders**: when a taught form uses a
+stand-in for something the learner supplies (e.g. `COUNT(col)`, `SUM(column)`), say
+once that the placeholder is not literal (they replace `col` with a real column
+name, they don't type the word "col") and keep the same placeholder word everywhere
+so it reads as the same idea. Avoid a placeholder that is itself real syntax in some
+dialect (e.g. `[name]` is a literal identifier quote in SQL Server, so a beginner
+may type the brackets). Found when a SQL session wrote the generic `COUNT(column)`
+in prose but the example used `COUNT(referrer)`, with no cue that `column` was a
+stand-in.
 
 **2. Every code example gets a comment saying what it DOES**, not just what it
 outputs. (For non-code subjects: annotate every worked example with the *why*, not
@@ -59,7 +68,13 @@ inline code *comment* in a faded or Parsons snippet that names the very token be
 blanked: describe what the line DOES instead (`# put the text in`, not
 `# the write method`; `# add each page onto the list`, not `# use extend`). Seen
 repeatedly (Sessions 2, 4, 5, 8), so check every faded/Parsons comment against its
-own blank before shipping.
+own blank before shipping. The same leak hides in a **predict-drill's question
+text**: an `ask` may state the required output FORMAT (a row count, a decimal, "list
+all in any order", "in exact order") but must NEVER state the CONCEPT or mechanic the
+drill is testing. A drill asking "what does `COUNT(referrer)` return? (COUNT of a
+column skips NULLs)" hands over the very rule it means to test; drop the parenthetical
+and let the drill test recall. Distinguish a fair format nudge ("written exactly as
+the tool prints it") from a concept giveaway.
 
 **9. Never fix the correct multiple-choice answer in a constant slot.** Shuffle
 options at render time and reshuffle on reset. (The "all correct answers were
@@ -261,6 +276,20 @@ a `set` is order-independent so it works even without one. Found when a SQL spri
 Session 1-2 drills were mostly row-counts; also normalize a trailing `[.;]+` in the
 count/value path so those drills forgive the same stray punctuation the token path
 already does.
+
+**Vary the cognitive TASK, not only the answer type.** A good answer-type spread
+(value/set/seq/count) is necessary but not sufficient: a section still feels
+repetitive, and under-tests, if every drill is the same MOVE with a different
+surface (e.g. one operation over the whole dataset, restated with COUNT, then SUM,
+then AVG, then MIN). Push the drills across genuinely different tasks and build an
+easy-to-hard ramp toward the milestone shape, e.g. read one whole result, then apply
+the operation to a filtered subset, then read one group out of a grouped result,
+then combine several clauses at once. Do not over-weight the easiest move just
+because it grades cleanly. Found when a SQL Session-3 aggregation section had six of
+eleven drills that were all "one aggregate over the whole table"; the fix kept three
+and moved the rest to filter-then-aggregate, a per-group read, and GROUP BY / HAVING.
+The same idea generalizes to any subject: vary what the learner has to DO, not just
+the shape of the answer.
 
 ## Always-true artifact-integrity rule
 
