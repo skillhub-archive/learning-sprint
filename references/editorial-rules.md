@@ -323,7 +323,9 @@ guard, both of which bite AFTER the content audit has already passed:
   PREFER REWORDING to avoid an apostrophe over escaping it (`\'` is fragile to future
   edits).
 - **A single long line can blow out a fixed layout.** See the Parsons-layout note in
-  `workbook-template.md` (`minmax(0, 1fr)` tracks, not `1fr`).
+  `workbook-template.md`: two-column default uses `minmax(0, 1fr)` tracks (not plain
+  `1fr`); switch the whole sprint to a single full-width column only when its tiles
+  will actually overflow (long-query subjects like SQL), never as a blanket default.
 
 Belt-and-suspenders for both: actually open or refresh the published artifact and
 confirm the interactive parts render before calling the session done.

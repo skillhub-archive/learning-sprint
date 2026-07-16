@@ -91,13 +91,27 @@ unassisted). Two sub-types:
 - **Parsons problems:** correct-ordered lines shown **shuffled**; the learner
   clicks lines from a "bank" into a "solution" area in order, then checks.
   Implement click-to-move (bank ↔ solution), not drag-and-drop (works on mobile,
-  fewer bugs). If a shuffle equals the correct order, reshuffle/rotate. Give the two
-  columns `grid-template-columns: minmax(0, 1fr) minmax(0, 1fr)` (NOT plain
-  `1fr 1fr`) plus `.pcol { min-width: 0; }`, so a long non-wrapping code line can't
-  force its track to content-width and push the whole card past the page edge (a
-  `1fr` track's default minimum is its content). Also keep individual lines short:
-  assign a long URL to a `url` variable rather than inlining it in the
-  `requests.get(...)` line. Disable the **Check order** button until at least one
+  fewer bugs). If a shuffle equals the correct order, reshuffle/rotate. **Default to
+  two side-by-side columns** (`grid-template-columns: minmax(0, 1fr) minmax(0, 1fr)`,
+  NOT plain `1fr 1fr`, plus `.pcol { min-width: 0; }` so a long non-wrapping line
+  can't force its track to content-width and push the card past the page edge). That
+  layout gives each tile only ~54 monospace chars, which is plenty for short tiles
+  (most code, and non-code subjects like animation, language or cooking where a tile
+  is a short step). **Only switch to a single full-width column
+  (`grid-template-columns: 1fr`, bank stacked ABOVE the solution) when a sprint's
+  Parsons lines will actually run past that ~54-char budget** (verbose queries like
+  SQL, long code lines): full width gives each tile ~115 chars so clauses fit intact
+  instead of getting a per-line horizontal scrollbar that fights the click-to-move
+  interaction. Do NOT make full width a blanket default across subjects; it is a fix
+  for long tiles, not an upgrade. Decide the layout ONCE per sprint and use the same
+  one for every session in it, since a layout that changes shape mid-sprint reads as
+  unfinished. If you pick full width, add a one-line blurb by the Parsons heading
+  explaining the two stacked lists and click-to-move, because the wide tiles look a
+  touch sparse on short-line sessions. Either way keep individual lines short: one
+  clause per tile, multi-line a long subquery / CTE body across tiles (or assign a
+  long URL to a `url` variable), and keep `overflow-x: auto` on each line as a safety
+  net so a stray long line degrades to a scrollbar rather than blowing out the
+  layout. Disable the **Check order** button until at least one
   line has been moved into the solution column, using a separate `checked` flag so
   placing and removing lines stays fully interactive while only the button is gated
   (rule 20).
