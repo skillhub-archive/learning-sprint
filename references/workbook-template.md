@@ -38,6 +38,13 @@ examples with expected results. Cover the genuine high-leverage content, go deep
 than a syntax tour. The final "Your turn" of the session should BE the session
 milestone task.
 
+**Order every concept explain-then-demonstrate** (rule 16): if a worked example uses
+notation new to this session (a new operator, a qualified name like `alias.column`, a
+new clause), teach that notation in prose FIRST, then show the example. An example
+the learner has to decode with unexplained syntax lands before its own explanation,
+which reads as "you were expected to already know this." When in doubt, put the
+teaching paragraph above the code block, not after it.
+
 When a session mutates the shared practice data (adds a column or rows via a
 paste-and-run script) or otherwise needs a from-zero rebuild, put that full-setup
 fallback (a collapsible "lost your environment? start fresh" block) **directly under

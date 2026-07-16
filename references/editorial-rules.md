@@ -10,8 +10,8 @@ run back across Sessions 1-5), rule 20 from a cross-session polish pass over all
 ten sessions. Later always-true refinements (the drill-answer-variety and drill-task-variety
 rules below, the syntax-placeholder clause in rule 1, the ask-must-not-leak clause
 in rule 8, plus the level-0 environment-onboarding guidance in `SKILL.md` and the
-Reveal-gating clause added to rule 20) came from building a second sprint in another
-subject (SQL, Sessions 1-3).
+Reveal-gating clause added to rule 20, and the example-ordering clause in rule 16)
+came from building a second sprint in another subject (SQL, Sessions 1-4).
 
 **A session is NOT "done" until it passes every rule below.** Run this checklist
 against each session artifact before you publish it and before you tell the user
@@ -120,7 +120,18 @@ letter of rules 1-2 (a comment explains it) isn't enough: if a method or idiom
 first surfaces buried in a code block, a task prompt, or a drill, it reads as
 bolted-on and turns a learner off. Also watch for **asymmetry**: if one member of a
 pair gets a worked example (e.g. `break`), its sibling (`continue`) must too, not
-just a one-line definition or a first appearance inside a drill.
+just a one-line definition or a first appearance inside a drill. **This covers
+worked examples, not only isolated operations: order every concept
+explain-then-demonstrate, so a worked example that USES new notation comes AFTER
+that notation is taught, never before.** If the reader would have to infer
+unexplained syntax just to parse your example, the example is in the wrong place,
+move the explanation above it. Found when a SQL session showed a full `JOIN` query
+using table aliases and qualified columns (`c.name`, `o.amount`) and only explained
+the `alias.column` form a paragraph later, so the learner met `c.name` with no idea
+what the dot meant; the learner's own framing was "you assumed I knew something
+before I did, and expected me to do the thing without being told what I needed to do
+the thing." The fix taught the aliases and the `alias.column` form (with the why)
+first, then showed the query.
 
 ## Feedback altitude
 
