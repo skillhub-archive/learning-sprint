@@ -11,7 +11,11 @@ ten sessions. Later always-true refinements (the drill-answer-variety and drill-
 rules below, the syntax-placeholder clause in rule 1, the ask-must-not-leak clause
 in rule 8, plus the level-0 environment-onboarding guidance in `SKILL.md` and the
 Reveal-gating clause added to rule 20, and the example-ordering clause in rule 16)
-came from building a second sprint in another subject (SQL, Sessions 1-4).
+came from building a second sprint in another subject (SQL, Sessions 1-4). The
+no-author-with-Claude-instructions rule below came from designing the post-sprint
+"Where to next" Hub closer (which also lives in `workbook-template.md`). The rule
+count stays at **20 numbered rules**: all of these are always-true refinements, not
+new numbered learner-fairness rules.
 
 **A session is NOT "done" until it passes every rule below.** Run this checklist
 against each session artifact before you publish it and before you tell the user
@@ -329,6 +333,24 @@ guard, both of which bite AFTER the content audit has already passed:
 
 Belt-and-suspenders for both: actually open or refresh the published artifact and
 confirm the interactive parts render before calling the session done.
+
+## Always-true rule: no author-with-Claude instructions in learner-facing copy
+
+Learner-facing copy (Hub sections, session text, the "Where to next" closer, footers)
+must NEVER tell the reader to "ask me" or "ask Claude" to build, generate, or change
+something. That is a build-on-demand instruction that only makes sense to the author
+driving Claude; a hosted reader opening the page has no chat and no such access, so it
+reads as broken or confusing. This is the learner-facing twin of the rule that CLI-only
+steps do not belong on a teammate-facing Confluence page. Two places it recurs:
+
+- **An unbuilt-session card or Hub intro that says "ask to build it".** Fine as a
+  transient AUTHORING state, but swap it to a real Open link once the session exists,
+  and to done-state wording once the whole sprint is complete (see the Hub-completion
+  cleanup note in `workbook-template.md`).
+- **A "Where to next" closer that says "ask me to build the next topic"** instead of
+  pointing at genuine outward resources. Point OUTWARD to real resources (or link an
+  existing bonus workbook); never at the author's chat. See the closer structure and
+  the genuine-credentials-only rule in `workbook-template.md`.
 
 ## House style
 

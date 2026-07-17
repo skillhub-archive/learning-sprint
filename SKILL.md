@@ -45,6 +45,12 @@ get swapped per subject (see `references/domain-adaptation.md`):
   template in `references/workbook-template.md`.
 - Everything is **self-grading** (no live grading needed) and **cross-linked**:
   the Hub links out to built sessions; each session links back to the Hub.
+- **A "Where to next" closer on the finished Hub**: a short forward-looking send-off
+  section (NOT a numbered level or "bonus level") that names the natural next topic
+  pointed OUTWARD to genuine resources, and lists genuine, proctored certifications
+  web-verified current at build time. Optionally a **bonus session** (a real workbook
+  outside the graded syllabus) when the next topic is self-containable. See
+  `references/workbook-template.md`.
 
 This maps directly onto the canonical five-part request:
 1. N-hour plan, the 20% that drives 80%, split into sessions + a review each → the
@@ -116,6 +122,15 @@ built sessions show a real **Open** link (their published URL, `target="_blank"`
 unbuilt ones show a "not built yet, ask to build it" state. After you publish a
 session, **redeploy the Hub with that session's URL added.** Keep each artifact's
 file path stable so redeploys keep the same URL.
+
+The "ask to build it" state is a transient AUTHORING convenience and must never
+survive to a hosted reader (a hosted Hub has no chat). Swap each unbuilt card to a
+real Open link as its session ships, and when the LAST session ships run the
+**Hub-completion cleanup** (drop all build-on-demand copy, done-state the Levels
+intro, retitle the nav callout "Using this Hub" and move it under the cards) and
+append the **"Where to next" closer** as the final section. The closer points OUTWARD
+to genuine resources and lists only genuine, web-verified certifications; it is never
+a numbered level. Full structure for both is in `references/workbook-template.md`.
 
 ## Step 4: Build sessions on demand (workbook artifacts)
 

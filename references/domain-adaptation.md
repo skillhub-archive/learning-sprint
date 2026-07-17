@@ -73,7 +73,33 @@ practice platform for code; a grammar reference + a speaking app + native audio 
 language; annotated master games + a tactics trainer for chess). Verify resources
 exist and say what you claim, don't invent them.
 
-## 4. Worked mini-example: "Excel to intermediate, for reporting"
+## 4. The "Where to next" closer is per-subject (and must be web-verified)
+
+A finished Hub gets a "Where to next" send-off section (structure in
+`workbook-template.md`). Both of its blocks are subject-specific and MUST be checked
+against the live web at build time, because they go stale:
+
+- **The "try this next" topic** is whatever this subject's natural next climb is (SQL
+  -> window functions; beginner Python -> a web framework or deeper data work;
+  Spanish -> the subjunctive; chess -> endgame theory). Point at genuine current
+  resources for it, never at "ask me to build it".
+- **The certifications** differ per subject and CHURN: exam codes get renamed,
+  programs get retired, prices change. Web-verify each credential exists, is current,
+  and says what you claim BEFORE writing it; never list one from memory. List only
+  genuine proctored exams, not completion badges, and add an honest caveat where the
+  subject has no strong or vendor-neutral credential (many do not). Some subjects have
+  no real exam at all: say so plainly rather than inventing one.
+
+Add an optional **bonus session** (a real workbook, but OUTSIDE the graded syllabus:
+no level number, not counted in Hub progress, titled about the topic rather than as a
+rung) ONLY when the next topic is self-containable as one more hands-on session (SQL
+window functions qualified: they build straight on the joins and aggregates already
+taught). It is a per-subject judgment, not a default. When the next topic is really a
+whole new subject, leave the closer as a signpost-only send-off and point outward.
+When a bonus session does exist, surface it only through the closer's "try this next"
+signpost (an "Open workbook" link), never as an extra graded card.
+
+## 5. Worked mini-example: "Excel to intermediate, for reporting"
 
 - **20% that pays** (goal = reporting): references/formulas, lookups
   (XLOOKUP/INDEX-MATCH), pivot tables, basic cleaning, charts. Skip VBA/macros for

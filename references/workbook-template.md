@@ -169,7 +169,61 @@ Satisfies requirement #3. A short MCQ (~5 Q) that reveals the correct answer, th
 ## Footer
 
 Session x of N; the milestone reminder ("hit it unassisted, then tick SNN on your
-Hub"); a pointer to the next session ("ask me to build it").
+Hub"); a pointer to the next session. While you are authoring on demand that pointer
+can read "ask me to build it", but once the following session exists swap it for a
+real Open link. On the FINAL session's footer there is no next session, so it instead
+carries a single line pointing back to the Hub's "Where to next" closer (see below).
+Learner-facing copy on a hosted page must never tell the reader to "ask me / ask
+Claude" to build anything (see the author-instructions rule in `editorial-rules.md`).
+
+## Hub: the "Where to next" closer (optional final section)
+
+A finished Hub gets one forward-looking send-off, appended as the LAST content
+section before the footer. It is a SECTION, never a session: no drills, no quiz, no
+checkboxes, and it is NOT a numbered level or a "bonus level". Its job is to answer
+"you finished, now what?" honestly. Two blocks, both optional per subject:
+
+1. **"Try this next" signpost.** Name the natural next topic (often the one thing the
+   sprint pointed at but did not fully teach) and point OUTWARD to genuine external
+   resources for it (canonical docs, a reputable tutorial). NEVER point the reader at
+   "ask me" or "ask Claude to build it": a hosted Hub has no chat, so a build-on-demand
+   instruction is meaningless to a reader (same class as putting CLI-only steps on a
+   teammate-facing page; see the author-instructions rule in `editorial-rules.md`). If
+   the sprint has an optional bonus workbook (below), the signpost may ALSO carry an
+   "Open workbook" link to it, ALONGSIDE the outward resources, not instead of them.
+2. **"Get it certified" block.** List GENUINE, proctored credentials only, the kind a
+   real exam body grants. Skip course-completion "certificate" badges (they prove
+   attendance, not skill). Web-verify each credential is current at build time (exam
+   codes, price, and whether it still exists all churn) and state an honest caveat
+   where one is true (e.g. "there is no widely-recognized vendor-neutral X exam", or
+   "this tool has no exam, it is a library not a product you certify on"). If a subject
+   has no real credential, say so rather than padding the block. Certs are per-subject
+   and must be verified fresh, never from memory (see `domain-adaptation.md`).
+
+Echo it once from the capstone: the final session's footer carries a single line
+pointing back to this closer, in place of the usual next-session pointer.
+
+An optional **bonus session** (a real workbook, but OUTSIDE the graded syllabus: no
+level number, not counted in the Hub progress, titled about the topic rather than as a
+rung) is added ONLY when the next topic is self-containable as one more hands-on
+session. It is a per-subject judgment, not a default; when the next topic is really a
+whole new subject, leave the closer as a signpost-only send-off. A bonus session is
+surfaced ONLY through the closer's signpost (an "Open workbook" link), never as an
+extra graded card, and it must NOT get a Hub progress checkbox (the bar stays N/N).
+
+## Hub-completion cleanup (when the last session ships)
+
+While a sprint is being built the Hub carries build-on-demand copy: unbuilt cards say
+"not built yet", the intro invites the learner to ask for the next one. The moment the
+LAST session ships that copy is stale and must be swapped to completed-state wording:
+- Drop every "ask me to build Session N" / "the rest are waiting to be built" line.
+- The Levels intro becomes a done-state line (e.g. "all N sessions are built, open any
+  card").
+- Retitle the navigation callout "Using this Hub" and move it to directly AFTER the
+  session cards it describes, so it does not sit at the bottom competing with the
+  send-off. Target section order: level track -> Using this Hub -> resources ->
+  "Where to next" -> footer.
+- Add the "Where to next" closer (above) as the final section.
 
 ## Build / QA notes
 
