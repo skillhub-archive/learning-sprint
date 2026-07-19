@@ -1,0 +1,86 @@
+{
+  "skill_name": "learning-sprint",
+  "evals": [
+    {
+      "id": 0,
+      "name": "non-code-subject-trigger-chess",
+      "prompt": "I want to get actually good at chess this year. I'm maybe 800 elo, play on my phone at lunch, and I keep losing the same ways. Can you put together something structured for me?",
+      "expected_output": "The skill triggers on a non-programming subject. The response runs the intake/roadmap step: it proposes a leveled sprint (roadmap Hub plus hands-on workbook sessions) rather than a flat list of tips, asks or accounts for time budget and current level, and adapts the 'real environment' to chess (real games/puzzles as the hands-on part). It should NOT assume the subject must be code.",
+      "files": [],
+      "assertions": [
+        {
+          "text": "Skill triggers on a non-programming subject: proposes a leveled sprint (roadmap Hub plus hands-on workbook sessions), not a flat list of tips"
+        },
+        {
+          "text": "Asks for or accounts for time budget and the stated current level (800 elo)"
+        },
+        {
+          "text": "Adapts the 'real environment' to chess (real games/puzzles as the hands-on part)"
+        },
+        {
+          "text": "Does NOT assume the subject must be code"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "pasted-multipart-plan-excel",
+      "prompt": "Build me a 20-hour 'learn Excel properly' plan: I want it split into sessions I can do in about 2 hours each, with quizzes so I know I actually got it, clear levels from beginner up, and links to good resources. I use Excel daily for basic stuff but formulas beyond SUM scare me.",
+      "expected_output": "Proposes the sprint structure: a Hub with levels/milestones and ~10 sessions, each following the 6-part session anatomy (hands-on tasks, predict drills, arrange-and-fill, write-it, flashcards, quiz), with self-grading and progress tracking, plus curated resources. Session topics should ramp from the learner's stated level (formulas beyond SUM) rather than starting at 'what is a spreadsheet'.",
+      "files": [],
+      "assertions": [
+        {
+          "text": "Proposes the sprint structure: a Hub with levels/milestones and ~10 sessions"
+        },
+        {
+          "text": "Sessions follow the 6-part session anatomy (hands-on tasks, predict drills, arrange-and-fill, write-it, flashcards, quiz)"
+        },
+        {
+          "text": "Includes self-grading, progress tracking, and curated resources"
+        },
+        {
+          "text": "Session topics ramp from the learner's stated level (formulas beyond SUM), not from 'what is a spreadsheet'"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "near-miss-single-question-not-a-sprint",
+      "prompt": "Can you explain how VLOOKUP works? I keep getting #N/A when I copy it down the column.",
+      "expected_output": "The skill does NOT take over: this is a single how-does-X-work question with a concrete bug, so the right response is a direct explanation of VLOOKUP and the likely #N/A cause (unanchored range reference when copying down), not a proposal to build a multi-session learning sprint. Offering a sprint as a brief afterthought is acceptable; leading with one is a failure.",
+      "files": [],
+      "assertions": [
+        {
+          "text": "The skill does NOT take over: response is a direct VLOOKUP explanation, not a proposal to build a multi-session sprint (leading with a sprint = failure; brief afterthought offer is acceptable)"
+        },
+        {
+          "text": "Diagnoses the likely #N/A cause: unanchored table_array range reference shifting when copied down (fix with $ absolute references)"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "engine-rules-casefold-and-verification",
+      "prompt": "I'm ready for Session 2 of my SQL sprint (filtering with WHERE). Build the workbook session.",
+      "expected_output": "The build plan consults the editorial rules and workbook template. Two specific assertions: (1) it commits to the rule-18 verification step (run every snippet against real SQLite and diff claimed outputs exactly before shipping) plus the rule-19 taught-before-tested trace; (2) it makes the caseFold grading decision explicitly for SQL (case-insensitive matching on value/count answers, per the canonical grader contract in workbook-template.md), rather than silently inheriting exact-case matching. Also: no Python Tutor 'watch it run' link for SQL, and drills vary answer type and cognitive task instead of defaulting to row-counts.",
+      "files": [],
+      "assertions": [
+        {
+          "text": "Commits to the rule-18 verification step: run every snippet against real SQLite and diff claimed outputs exactly before shipping"
+        },
+        {
+          "text": "Includes the rule-19 taught-before-tested trace"
+        },
+        {
+          "text": "Makes the caseFold grading decision explicitly for SQL (case-insensitive matching on value/count answers per the canonical grader contract), rather than silently inheriting exact-case"
+        },
+        {
+          "text": "No Python Tutor 'watch it run' link for SQL"
+        },
+        {
+          "text": "Drills vary answer type and cognitive task instead of defaulting to row-counts"
+        }
+      ]
+    }
+  ]
+}

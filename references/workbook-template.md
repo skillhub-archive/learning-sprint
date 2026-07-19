@@ -63,18 +63,31 @@ always reveal *why*.
   has content** (rule 20; also guard the Enter-key path), and each drill's
   correctness **persists and restores on reload** through a shared `markDone(ok)`
   helper, feeding the Drills-correct counter.
-- **Vary the answer TYPE; do not default every drill to a count.** Give each drill an
-  explicit `type` and grade through one shared `gradeDrill(d, val)`: `count` and
-  `value` (a single result, or "which is first") match exactly via the normalizer;
-  `set` (all results, any order) and `seq` (results in order) tokenize both sides with
-  `toks(s) = s.toLowerCase().trim().split(/[\s,.;]+/).filter(Boolean)` then compare
-  sorted (set) or in order (seq). Ask `value` when one result comes back, `set` when
-  several do, `count` only when the count is the lesson, `seq` only when the result
-  has a defined order. Also vary the **cognitive task**, not just the answer type:
-  ramp from reading one whole result, to operating on a filtered subset, to reading
-  one group out of a grouped result, to combining several clauses, rather than
-  restating the same move with a different function. See the drill-answer-variety
-  rule in `editorial-rules.md`.
+- **Vary the answer TYPE; do not default every drill to a count.** This bullet is
+  the CANONICAL grader contract (rule 23 in `editorial-rules.md` holds the why;
+  `domain-adaptation.md` shows per-subject drill flavors; if you change the grader,
+  change it HERE and fix the pointers, never fork the spec). Give each drill an
+  explicit `type` and grade through one shared `gradeDrill(d, val)`:
+  - `count` and `value` (a single result, or "which is first") match exactly via the
+    normalizer: trim, strip trailing `[.;]+`, and, when `caseFold` is on (below),
+    lowercase both sides.
+  - `set` (all results, any order) and `seq` (results in order) tokenize both sides
+    with `toks(s) = s.toLowerCase().trim().split(/[\s,.;]+/).filter(Boolean)` then
+    compare sorted (set) or in order (seq).
+  - **`caseFold` is a per-subject decision, made consciously at track-build time.**
+    Turn it ON for subjects whose answers are case-insensitive (SQL: `NULL` and
+    `null` are the same answer, and grading `null` wrong is exactly the unfair-grade
+    failure rule 7 forbids). Leave it OFF for subjects where case IS the lesson
+    (Python: `True` vs `true` is a real distinction, and the drill must catch the
+    learner who types `true`). The `set`/`seq` token path always folds case (it
+    compares result *names*, where case is presentation); the flag governs only
+    `count`/`value`.
+  Ask `value` when one result comes back, `set` when several do, `count` only when
+  the count is the lesson, `seq` only when the result has a defined order. Also vary
+  the **cognitive task**, not just the answer type: ramp from reading one whole
+  result, to operating on a filtered subset, to reading one group out of a grouped
+  result, to combining several clauses, rather than restating the same move with a
+  different function. See rule 23 in `editorial-rules.md`.
 - Include at least one **"trace it"** item that forces step-by-step mental
   execution (e.g. variable values after each line).
 - For code subjects, add a **"watch it run" link to Python Tutor**
@@ -260,7 +273,7 @@ LAST session ships that copy is stale and must be swapped to completed-state wor
 
 ## The QA gate (do this before calling a session "done")
 
-Every session artifact must pass **all 20 rules in `references/editorial-rules.md`**
+Every session artifact must pass **every numbered rule in `references/editorial-rules.md`**
 before you publish it or tell the user it's ready. That file is the checklist. The
 current template already bakes each rule into the structure above (shuffled MCQ +
 deep-link review backlinks in Part 6, `scrollIntoView` nav, Parsons snap-back,

@@ -1,26 +1,55 @@
 # Editorial rules (the QA checklist every session must pass)
 
-These 20 rules were derived by hardening real workbook sessions (a Python sprint,
-Sessions 1-10) through editor passes with the learner. They are not style
-preferences: each one fixes a specific way a session quietly betrays a learner's
-trust (an unfair grade, a hint that leaks the answer, a glyph that teaches the
-wrong character to type). Rules 1-14 came from Session 1, rule 15 from Session 2,
-rule 16 from Session 3, rules 17-18 from Session 4, rule 19 from Session 6 (then
-run back across Sessions 1-5), rule 20 from a cross-session polish pass over all
-ten sessions. Later always-true refinements (the drill-answer-variety and drill-task-variety
-rules below, the syntax-placeholder clause in rule 1, the ask-must-not-leak clause
-in rule 8, plus the level-0 environment-onboarding guidance in `SKILL.md` and the
-Reveal-gating clause added to rule 20, and the example-ordering clause in rule 16)
-came from building a second sprint in another subject (SQL, Sessions 1-4). The
-no-author-with-Claude-instructions rule below came from designing the post-sprint
-"Where to next" Hub closer (which also lives in `workbook-template.md`). The rule
-count stays at **20 numbered rules**: all of these are always-true refinements, not
-new numbered learner-fairness rules.
+These 26 rules were derived by hardening real workbook sessions (a Python sprint,
+Sessions 1-10, then a SQL sprint) through editor passes with the learner. They are
+not style preferences: each one fixes a specific way a session quietly betrays a
+learner's trust (an unfair grade, a hint that leaks the answer, a glyph that
+teaches the wrong character to type). Rules 1-14 came from Python Session 1, rule
+15 from Session 2, rule 16 from Session 3, rules 17-18 from Session 4, rule 19
+from Session 6 (then run back across Sessions 1-5), rule 20 from a cross-session
+polish pass over all ten sessions. The SQL sprint added refinements inside
+existing rules (the syntax-placeholder clause in rule 1, the ask-must-not-leak
+clause in rule 8, the example-ordering clause in rule 16, the Reveal-gating clause
+in rule 20) plus the level-0 environment-onboarding guidance in `SKILL.md`. Rules
+21-26 were originally unnumbered "always-true" sections; they were numbered on
+2026-07-17 so the checklist is one flat list with nothing skippable ("check all N"
+now genuinely covers everything).
 
 **A session is NOT "done" until it passes every rule below.** Run this checklist
 against each session artifact before you publish it and before you tell the user
 it's ready. When a rule can't be satisfied, say so explicitly rather than shipping
 past it.
+
+## Contents
+
+**Content / teaching:** 1 unpack every term · 2 comment what code does · 3
+show-what-it-looks-like transcripts · 4 solutions use only taught patterns · 5
+teach old-way-vs-new-way contrast · 6 patch the material, not the learner
+
+**Exercise fairness / feedback:** 7 never grade untaught concepts · 8 hints must
+never contain the answer · 9 shuffle MCQ answers · 10 deep-link wrong answers to
+the source concept
+
+**Interaction / architecture:** 11 identical mechanics get identical presentation
+· 12 reversible interactions restore original state · 13 granular per-part resets
+· 14 scrollIntoView, never #hash anchors
+
+**Rendering:** 15 disable code-font ligatures
+
+**Teaching altitude:** 16 explain-then-demonstrate, prose before code
+
+**Feedback altitude:** 17 unpack cross-session symbols in feedback text
+
+**Correctness / QA gate:** 18 run every snippet and diff output exactly · 19
+trace every graded item to where its concept is taught
+
+**Answer gating:** 20 disable Check buttons until there is an answer
+
+**Engine / integrity (formerly "always-true" sections):** 21 honest, persisted,
+reversible self-marks · 22 progress-panel parity and persistence · 23 vary drill
+answer types AND cognitive tasks · 24 the artifact's own JS/layout must work · 25
+no author-with-Claude instructions in learner-facing copy · 26 house style: no em
+dashes
 
 ---
 
@@ -220,12 +249,12 @@ construction and need nothing. Also wire the same non-empty guard on any Enter-k
 path that submits a drill. Found applying this across all ten Python-sprint
 sessions.
 
-## Always-true self-tracking rule
+## Self-tracking
 
-Any self-assessment control (e.g. "Mine worked" / "Needs another pass") must state
-what it does and admit the app can't verify it — the workbook can't run the real
-environment, so the learner self-checks. Be honest about the boundary rather than
-implying the artifact graded the real work.
+**21. Any self-assessment control (e.g. "Mine worked" / "Needs another pass") must
+state what it does and admit the app can't verify it** — the workbook can't run the
+real environment, so the learner self-checks. Be honest about the boundary rather
+than implying the artifact graded the real work.
 
 Three concrete requirements a self-mark must meet (a control that fails these
 betrays trust just as an unfair grade does):
@@ -242,11 +271,11 @@ betrays trust just as an unfair grade does):
   which showed "✓ logged" but recorded nothing, could not be undone, and left the
   editor open, all fixed by making the mark a persisted, counted, reversible toggle.)
 
-## Always-true progress-panel parity and persistence rule
+## Progress panel
 
-The progress strip must carry a counter for EVERY graded practice, not a subset,
-and every graded practice must persist and restore on reload. Two failures this
-guards, both found late in the Python sprint:
+**22. The progress strip must carry a counter for EVERY graded practice, not a
+subset, and every graded practice must persist and restore on reload.** Two
+failures this guards, both found late in the Python sprint:
 
 - **Parity.** The workbook has five graded practices: Part 1 hands-on tasks, Part 2
   predict drills, Part 5 flashcards, Part 4 write-its, and the Part 6 quiz. The
@@ -269,30 +298,28 @@ guards, both found late in the Python sprint:
   on refresh is the failure to avoid, it silently under-reports the learner's real
   progress.
 
-## Always-true drill-answer-variety rule
+## Drill variety
 
-Part 2 predict drills must vary their ANSWER TYPE, not default to a count. A count
+**23. Part 2 predict drills must vary their ANSWER TYPE, not default to a count —
+and vary the cognitive TASK, not only the answer type.** A count
 ("how many rows / items?") is the easiest answer to grade, so drills drift toward it,
 but a count tests a proxy (how many pass) instead of the real skill (which results
-come back) and never touches what the learner actually produces. Give each drill an
-explicit `type` and grade through one shared `gradeDrill(d, val)`: `count` and
-`value` (a single result, or "which one is first") match exactly via the normalizer;
-`set` (all results, ANY order) and `seq` (results in exact order) tokenize both sides
-with `toks(s) = s.toLowerCase().trim().split(/[\s,.;]+/).filter(Boolean)` then compare
-sorted (set) or in order (seq), so separators, case, and trailing punctuation are
-forgiven while a missing, extra, or mis-ordered answer fails. That shared grader is
-what makes "which results?" a fair, deterministic drill: without it the grader can
-match only one token, which is the very reason drills collapse to counts. GUIDANCE:
-ask `value` when one result comes back, `set` when several do, reserve `count` for
-when the count itself is the lesson, and use `seq` only when the result has a defined
-order (e.g. a sort). Aim for a spread, not eight-of-eleven counts. Determinism still
-governs (rule 18): a `seq` or "which is first" answer needs a genuine ordering, while
-a `set` is order-independent so it works even without one. Found when a SQL sprint's
-Session 1-2 drills were mostly row-counts; also normalize a trailing `[.;]+` in the
-count/value path so those drills forgive the same stray punctuation the token path
-already does.
+come back) and never touches what the learner actually produces. The four drill
+types are `value`, `set`, `seq`, and `count`, graded through one shared
+`gradeDrill(d, val)`; **the exact grader contract (normalizer, `toks()`, and the
+per-subject `caseFold` decision for case-insensitive subjects like SQL vs
+case-meaningful ones like Python) lives ONLY in `workbook-template.md` Part 2 —
+read it there; do not restate or fork it.** That shared grader is what makes "which
+results?" a fair, deterministic drill: without it the grader can match only one
+token, which is the very reason drills collapse to counts. GUIDANCE: ask `value`
+when one result comes back, `set` when several do, reserve `count` for when the
+count itself is the lesson, and use `seq` only when the result has a defined order
+(e.g. a sort). Aim for a spread, not eight-of-eleven counts. Determinism still
+governs (rule 18): a `seq` or "which is first" answer needs a genuine ordering,
+while a `set` is order-independent so it works even without one. Found when a SQL
+sprint's Session 1-2 drills were mostly row-counts.
 
-**Vary the cognitive TASK, not only the answer type.** A good answer-type spread
+**The cognitive-task half of this rule:** a good answer-type spread
 (value/set/seq/count) is necessary but not sufficient: a section still feels
 repetitive, and under-tests, if every drill is the same MOVE with a different
 surface (e.g. one operation over the whole dataset, restated with COUNT, then SUM,
@@ -306,12 +333,13 @@ and moved the rest to filter-then-aggregate, a per-group read, and GROUP BY / HA
 The same idea generalizes to any subject: vary what the learner has to DO, not just
 the shape of the answer.
 
-## Always-true artifact-integrity rule
+## Artifact integrity
 
-The artifact's own HTML/CSS/JS must actually work in the browser, and neither QA
-gate above checks that: rule 18 runs the learning snippets in a SEPARATE runtime and
-rule 19 traces teaching, so both are blind to a broken engine. Two failure modes to
-guard, both of which bite AFTER the content audit has already passed:
+**24. The artifact's own HTML/CSS/JS must actually work in the browser**, and
+neither QA gate above checks that: rule 18 runs the learning snippets in a SEPARATE
+runtime and rule 19 traces teaching, so both are blind to a broken engine. Two
+failure modes to guard, both of which bite AFTER the content audit has already
+passed:
 
 - **A JS syntax error silently kills the whole `<script>`.** Every dynamic part
   (drills, Parsons, faded, write-its, quiz) renders empty and every control is dead,
@@ -334,11 +362,11 @@ guard, both of which bite AFTER the content audit has already passed:
 Belt-and-suspenders for both: actually open or refresh the published artifact and
 confirm the interactive parts render before calling the session done.
 
-## Always-true rule: no author-with-Claude instructions in learner-facing copy
+## Learner-facing copy
 
-Learner-facing copy (Hub sections, session text, the "Where to next" closer, footers)
-must NEVER tell the reader to "ask me" or "ask Claude" to build, generate, or change
-something. That is a build-on-demand instruction that only makes sense to the author
+**25. Learner-facing copy (Hub sections, session text, the "Where to next" closer,
+footers) must NEVER tell the reader to "ask me" or "ask Claude" to build, generate,
+or change something.** That is a build-on-demand instruction that only makes sense to the author
 driving Claude; a hosted reader opening the page has no chat and no such access, so it
 reads as broken or confusing. This is the learner-facing twin of the rule that CLI-only
 steps do not belong on a teammate-facing Confluence page. Two places it recurs:
@@ -354,6 +382,6 @@ steps do not belong on a teammate-facing Confluence page. Two places it recurs:
 
 ## House style
 
-No em dashes in any learner-facing copy. Use commas, colons, or parentheses
+**26. No em dashes in any learner-facing copy.** Use commas, colons, or parentheses
 instead. (This applies to all content this skill produces, per the author's
 writing-style preference.)

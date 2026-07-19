@@ -156,7 +156,8 @@ rest.
 ## Step 5: QA every session against the editorial rules (the definition of "done")
 
 A session is not finished when it renders. It is finished when it passes the
-**20-rule checklist in `references/editorial-rules.md`**. These rules were derived by
+**numbered checklist in `references/editorial-rules.md`** (26 rules as of
+2026-07-17; trust the file's own count over any number quoted elsewhere). These rules were derived by
 hardening real sessions with a live learner, and each one closes a specific way a
 session quietly betrays the learner's trust: an exercise that grades a concept it
 never taught, a hint that leaks its own answer, a code font that draws `!=` as `≠`
@@ -164,14 +165,14 @@ so the learner types the wrong character, a "correct" MCQ answer always sitting 
 slot A. **Run the checklist before you publish and before you tell the user a
 session is ready.** A faithful clone of the template starts compliant, but new
 content is exactly where rule-breaks creep back in, so verify every time rather than
-assuming. The last two rules are the closing gate and both need doing per session:
+assuming. Rules 18 and 19 are the closing gate and both need doing per session:
 **rule 18** runs every snippet and diffs its real output against every claimed output,
 and **rule 19** traces every graded item back to where its concept was taught so
 nothing is tested before it is taught. Run both with an INDEPENDENT, ADVERSARIAL
 reviewer (a separate agent told to find problems, given a baseline of what earlier
 sessions taught), not by re-reading your own work. One thing those two gates do NOT
 cover (both run outside the browser): whether the artifact's own JS still parses and
-renders. Per the artifact-integrity rule in `editorial-rules.md`, after ANY edit that
+renders. Per rule 24 (artifact integrity) in `editorial-rules.md`, after ANY edit that
 touches a JS string literal, even a late "harmless" comment tweak, re-validate the
 `<script>` and refresh the live artifact before republishing, since one unescaped
 apostrophe silently empties every interactive part. If a rule genuinely can't be met,
@@ -181,7 +182,7 @@ say so instead of shipping past it.
 
 - `references/workbook-template.md` — the exact 6-part session structure and the Hub
   structure. The authoritative build spec.
-- `references/editorial-rules.md` — the 20-rule QA checklist every session must pass
+- `references/editorial-rules.md` — the numbered QA checklist every session must pass
   before it's "done." Not style preferences; each rule fixes a real learner-trust
   bug found in production. This is the gate for Step 5.
 - `references/why-it-works.md` — the reasoning behind every part. Read this so you

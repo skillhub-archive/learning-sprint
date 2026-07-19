@@ -46,7 +46,9 @@ The general form of every part, and how it maps across domains:
   - Vary the answer type across drills (a single value, a count, the full set of
     results in any order, or results in a specific order), AND vary the cognitive
     task (read a whole result, operate on a subset, read one group, combine steps),
-    not one shape repeated; see the drill-answer-variety rule in `editorial-rules.md`.
+    not one shape repeated; see rule 23 in `editorial-rules.md` for the why and
+    `workbook-template.md` Part 2 for the canonical grader contract (including the
+    per-subject `caseFold` decision).
 
 - **Part 3 "Arrange & fill"** = *order the steps / fill the gap* (the reading→doing
   bridge).
