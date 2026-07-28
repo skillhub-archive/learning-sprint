@@ -48,9 +48,15 @@ get swapped per subject (see `references/domain-adaptation.md`):
 - **A "Where to next" closer on the finished Hub**: a short forward-looking send-off
   section (NOT a numbered level or "bonus level") that names the natural next topic
   pointed OUTWARD to genuine resources, and lists genuine, proctored certifications
-  web-verified current at build time. Optionally a **bonus session** (a real workbook
-  outside the graded syllabus) when the next topic is self-containable. See
-  `references/workbook-template.md`.
+  web-verified current at build time. See `references/workbook-template.md`.
+- **A bonus session** (a real workbook outside the graded syllabus, so opening it never
+  changes the learner's N/N score). **Standard on every track, not optional.** A 20-hour
+  sprint produces solid working knowledge, not advanced; the bonus workbook is the
+  track's advanced tier and it reuses the already-QA'd session engine, which is far
+  cheaper than authoring a separate "Advanced X" track. Pick the natural next topic that
+  is self-containable in one workbook. The one escape hatch: if a subject genuinely has
+  no self-containable next topic, say so explicitly and ship without one rather than
+  padding a weak bonus onto the track.
 
 This maps directly onto the canonical five-part request:
 1. N-hour plan, the 20% that drives 80%, split into sessions + a review each → the
@@ -107,9 +113,59 @@ if the user specifically wants a chat-based tutor.
 
 ## Step 3: Build the Hub (artifact)
 
-**Load the `artifact-design` skill first** (required before writing any artifact)
-and give this subject its *own* visual identity, don't reuse a template look.
-Ground the palette/type in the subject's world.
+**Load the `artifact-design` skill first** (required before writing any artifact).
+
+**First sprint in a new family:** give the subject its *own* visual identity, don't
+reuse a template look. Ground the palette/type in the subject's world.
+
+**Every LATER sprint that joins an existing family** (a shared Learning Hub, a site
+listing several tracks): the opposite instruction applies. The family's consistency
+IS the design. Before writing anything, **open an existing Hub and diff your plan
+against it**: column width, the hero's column structure (a two-column hero puts the
+copy left and the specimen right, with the progress panel full width beneath it), type
+scale, the eyebrow's exact format, the progress panel's stats/labels/reset control/bar
+caption, where Export-Import sits, the per-section kicker pattern, the "how this works"
+card shape, and the section titles.
+Inherit that skeleton exactly. Identity then comes from **accent colour, favicon,
+copy, and one small subject flourish** that does not touch layout.
+
+The line to hold is **structure versus flourish**:
+
+- **Flourish, encouraged**, and the best form of it is a **hero specimen**: the
+  smallest honest example of *what the learner will be able to produce*, rendered in
+  the subject's native display. Not a symbol of the subject, a small live instance of
+  it. This is what makes a Hub pull someone in, because it previews capability rather
+  than decorating the page. Worked examples: an animation track opens with a canvas
+  bouncing ball with onion skin, which is literally its Session 1 milestone; Git opens
+  with a real `git log --oneline --graph` excerpt showing a branch and a merge; SQL
+  opens with a `SELECT` and its result rows; Python opens with three lines and their
+  output. The test is "could the learner make this by the end?" If not, it is
+  decoration. Also fine as flourish: the accent palette, a mark in the H1.
+
+  **Match the medium.** The specimen animates only when the subject's output is
+  itself motion. Animation earns movement; Python, SQL and Git produce text, so their
+  specimens are static, and a type-out effect there is motion borrowed from another
+  track rather than fidelity to their own. Keeping motion where it is honest is also
+  what keeps it meaningful on the track that needs it.
+- **Structure, forbidden.** Replacing or re-inventing a shared component: the level
+  track, the progress panel and its stats, the "how this works" card strip, the column
+  width, the per-section kickers, where Export-Import sits. These are what make the
+  series legible as a series.
+
+Learned on the Git track (2026-07-28). It was built with a bespoke commit-graph level
+rail, a 960px column (the *session* width, not the 1120px Hub width), an invented
+callout box, and a roadmap-internal eyebrow, then rebuilt to match. The instructive
+part: the commit graph genuinely was roadmap-shaped, so it was defensible in isolation,
+and it still had to go. Most subjects have no sequence-shaped native visual, so a
+structural motif can only ever land on the occasional lucky subject, which makes the
+family LESS uniform, the very problem it looked like it solved. A flourish scales to
+every subject; a structural motif does not. That is the whole distinction.
+
+Per-track eyebrow and H1 follow the family's own pattern, e.g. eyebrow
+`Subject // 20-Hour Sprint` and H1 `Subject, <short thesis clause>` ("Python, the 20%
+that pays", "SQL, where your data lives", "Git, before you press enter"). The eyebrow
+must never carry roadmap-internal labels ("Track 3", "Core"): those mean nothing to a
+stranger and leak the author's private sequencing onto a public page (rule 27).
 
 The Hub contains: header + progress panel (sessions done / current level / hours, a
 progress bar); a short "how this works" strip; the 5-level track with two session

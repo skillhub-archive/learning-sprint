@@ -216,13 +216,21 @@ checkboxes, and it is NOT a numbered level or a "bonus level". Its job is to ans
 Echo it once from the capstone: the final session's footer carries a single line
 pointing back to this closer, in place of the usual next-session pointer.
 
-An optional **bonus session** (a real workbook, but OUTSIDE the graded syllabus: no
-level number, not counted in the Hub progress, titled about the topic rather than as a
-rung) is added ONLY when the next topic is self-containable as one more hands-on
-session. It is a per-subject judgment, not a default; when the next topic is really a
-whole new subject, leave the closer as a signpost-only send-off. A bonus session is
-surfaced ONLY through the closer's signpost (an "Open workbook" link), never as an
-extra graded card, and it must NOT get a Hub progress checkbox (the bar stays N/N).
+A **bonus session** (a real workbook, but OUTSIDE the graded syllabus: no level number,
+not counted in the Hub progress, titled about the topic rather than as a rung) is
+**standard on every track**. It is the track's advanced tier: a 20-hour sprint produces
+solid working knowledge, not advanced, and the bonus reuses the already-QA'd session
+engine, which is far cheaper than authoring a separate "Advanced X" track. Pick the
+natural next topic that is self-containable as one more hands-on session (SQL window
+functions qualified: they build straight on the joins and aggregates already taught).
+
+The one escape hatch: when the next topic is genuinely a whole new subject rather than a
+self-containable extension, say so explicitly and leave the closer as a signpost-only
+send-off rather than padding a weak bonus onto the track.
+
+A bonus session is surfaced ONLY through the closer's signpost (an "Open workbook"
+link), never as an extra graded card, and it must NOT get a Hub progress checkbox (the
+bar stays N/N).
 
 ## Hub-completion cleanup (when the last session ships)
 

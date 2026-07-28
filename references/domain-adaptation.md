@@ -92,12 +92,16 @@ against the live web at build time, because they go stale:
   subject has no strong or vendor-neutral credential (many do not). Some subjects have
   no real exam at all: say so plainly rather than inventing one.
 
-Add an optional **bonus session** (a real workbook, but OUTSIDE the graded syllabus:
-no level number, not counted in Hub progress, titled about the topic rather than as a
-rung) ONLY when the next topic is self-containable as one more hands-on session (SQL
-window functions qualified: they build straight on the joins and aggregates already
-taught). It is a per-subject judgment, not a default. When the next topic is really a
-whole new subject, leave the closer as a signpost-only send-off and point outward.
+Add a **bonus session** (a real workbook, but OUTSIDE the graded syllabus: no level
+number, not counted in Hub progress, titled about the topic rather than as a rung).
+This is **standard on every track**, as the track's advanced tier. Pick the natural
+next topic that is self-containable as one more hands-on session (SQL window functions
+qualified: they build straight on the joins and aggregates already taught). The
+per-subject judgment is only about WHICH topic, not whether to have one.
+
+The one escape hatch: when the next topic is genuinely a whole new subject rather than
+a self-containable extension, say so explicitly and leave the closer as a
+signpost-only send-off, pointing outward. Do not pad a weak bonus onto a track.
 When a bonus session does exist, surface it only through the closer's "try this next"
 signpost (an "Open workbook" link), never as an extra graded card.
 

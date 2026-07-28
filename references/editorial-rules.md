@@ -1,6 +1,6 @@
 # Editorial rules (the QA checklist every session must pass)
 
-These 26 rules were derived by hardening real workbook sessions (a Python sprint,
+These 27 rules were derived by hardening real workbook sessions (a Python sprint,
 Sessions 1-10, then a SQL sprint) through editor passes with the learner. They are
 not style preferences: each one fixes a specific way a session quietly betrays a
 learner's trust (an unfair grade, a hint that leaks the answer, a glyph that
@@ -13,7 +13,9 @@ clause in rule 8, the example-ordering clause in rule 16, the Reveal-gating clau
 in rule 20) plus the level-0 environment-onboarding guidance in `SKILL.md`. Rules
 21-26 were originally unnumbered "always-true" sections; they were numbered on
 2026-07-17 so the checklist is one flat list with nothing skippable ("check all N"
-now genuinely covers everything).
+now genuinely covers everything). Rule 27 came from designing the Git track on
+2026-07-28, where a Level 5 built around the author's own repo and two-account
+GitHub setup would have been literally uncompletable by any other learner.
 
 **A session is NOT "done" until it passes every rule below.** Run this checklist
 against each session artifact before you publish it and before you tell the user
@@ -50,6 +52,8 @@ reversible self-marks · 22 progress-panel parity and persistence · 23 vary dri
 answer types AND cognitive tasks · 24 the artifact's own JS/layout must work · 25
 no author-with-Claude instructions in learner-facing copy · 26 house style: no em
 dashes
+
+**Portability:** 27 every session must be completable by a stranger
 
 ---
 
@@ -385,3 +389,28 @@ steps do not belong on a teammate-facing Confluence page. Two places it recurs:
 **26. No em dashes in any learner-facing copy.** Use commas, colons, or parentheses
 instead. (This applies to all content this skill produces, per the author's
 writing-style preference.)
+
+## Portability
+
+**27. Every session must be completable by a stranger.** No graded path may require an
+account, repo, dataset, OS, shell, or tooling setup that the learner is not given or
+told how to create. Personal or environment-specific context belongs in an optional
+"apply it to your own setup" lane, never in the required path. Teach the general
+pattern and use a specific setup as the worked example, the way a SQL track teaches
+SQL against a neutral sample database rather than against the author's own data. Three
+places it recurs:
+
+- **A capstone anchored to a repo, project, or dataset only the author has.** Ship a
+  neutral, forkable practice target so every learner starts from the same real place,
+  then offer "or use your own project instead" as the alternative lane. A capstone that
+  names the author's own site is unusable by definition.
+- **An exercise that assumes more accounts, seats, or licences than a learner has.**
+  Make the single-account path the graded one; richer setups (a second account for real
+  peer review, a paid tier) become the optional better-if-you-have-it lane.
+- **Commands shown for only one OS or shell.** Show both, the same way engine
+  differences get flagged inline. A learner on another platform is otherwise stranded
+  on a step the track requires.
+
+This rule is the reason to separate "what the skill teaches" from "whose environment it
+was written on." The author's own setup is often the most convenient worked example, and
+using it is fine; requiring it is not.
