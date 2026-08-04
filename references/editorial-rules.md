@@ -42,7 +42,8 @@ the source concept
 
 **Feedback altitude:** 17 unpack cross-session symbols in feedback text
 
-**Correctness / QA gate:** 18 run every snippet and diff output exactly · 19
+**Correctness / QA gate:** 18 run every snippet and diff output exactly, and never
+ship an unrun claim about another platform, shell, installer or version · 19
 trace every graded item to where its concept is taught
 
 **Answer gating:** 20 disable Check buttons until there is an answer
@@ -207,6 +208,28 @@ wrong; a harness that rstripped both sides passed it on the first audit and only
 strict re-run caught it. Fold the same fact into the teaching: `.read()` returns
 every character including the final newline, a concrete reason to prefer iterating
 lines plus a per-line strip.
+**A claim about a platform, shell, installer, or version you did not actually run is
+NOT covered by running the session, and must not ship unqualified.** Running is
+authoritative only about the machine you ran on, so a sentence describing what some
+OTHER environment does is structurally invisible to this gate and to the adversarial
+reviewer, who runs on the same machine and finds no contradiction. Three acceptable
+resolutions, in order of preference: reproduce the other environment well enough to
+test it (override the relevant config, e.g. point `GIT_CONFIG_SYSTEM` at an empty file
+to simulate an install whose system config sets nothing, or pin the interpreter
+version); or scope the claim explicitly to the environment you did verify ("on Windows
+you will see...") and say nothing about the others; or cut the claim. Canonical case
+(Git S1): the session said that leaving `init.defaultBranch` unset makes Git "print a
+wall of hint text every single time you create a repository, nagging you to pick one".
+True on a stock macOS or Linux install, and FALSE on Git for Windows, where the
+installer pre-sets `init.defaultbranch=master` in the system config, suppressing the
+hint and silently producing `master`. The session declares PowerShell as its default
+shell, so it described a symptom its own primary audience never sees, and the learner
+therefore had no signal that they had skipped a setup step. It shipped, passed the
+gate, and was browser-checked before anyone caught it, because every check ran on the
+platform the sentence was not about. **The learner is the wrong backstop for this:**
+they cannot know the subject yet (that is why they are here) and they can only observe
+one environment, their own, so a wrong claim about a different one reads to them as
+simply true.
 
 **19. Before a session ships, trace every graded item back to where its concept is
 taught: no item may grade the learner on something the session (or an earlier one)
