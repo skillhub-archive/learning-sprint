@@ -132,6 +132,17 @@ unassisted). Two sub-types:
   few blanks as inline inputs. Disable **Check** until every blank is filled
   (rule 20). Check each blank; reveal answers.
 
+**Both Part 3 sub-types PERSIST (rule 22).** They are graded practices, so a reload
+must not wipe them, even though neither gets a progress-strip counter. Persist on
+Check only, matching the drills: Parsons saves `state.parsons[i] = {ok, order}` (the
+verdict plus the learner's final arrangement) and restores by moving those lines back
+into the solution column in the saved order before replaying the checked state; faded
+saves `state.faded[i] = {ok, vals}` (the verdict plus what was typed in each blank)
+and restores by refilling every blank, re-marking each, and re-showing the reveal. The
+per-part reset must clear both keys and save. This was missing from the engine until
+2026-09-08 and shipped in four tracks, because rule 22 used to enumerate only five
+graded practices; do not reintroduce it by cloning an older session.
+
 For non-code subjects, translate: arrange the steps of a process in order; fill the
 missing word/measure/move. See `domain-adaptation.md`.
 
@@ -162,6 +173,29 @@ A deck of prompt→answer cards for the atoms the learner should summon instantl
 again"** sends it to the back of the pile so it loops until automatic. Track
 mastered/pile counts, feeding the Cards-mastered counter. Mastered cards **persist
 as an index set** and are filtered out of the pile on reload. Reset button.
+
+**Deck size FLOATS, it is not a locked count, and it is capped.** Subjects differ, and
+so does how many genuine atoms a given level holds, so forcing every session in every
+track to the same number means padding some decks and gutting others. Size each deck to
+the atoms the session actually has, within a **12 to 16 band, and never past 18**.
+
+Three rules keep that from drifting upward (decided 2026-09-08):
+
+- **Every card is an atom worth instant recall.** If you are adding one to be thorough
+  rather than because the learner should summon it without thinking, cut it. Padding a
+  deck to hit a number is the failure this band exists to prevent, in both directions.
+- **A deck covers THIS session's atoms only, never cumulative ones.** This is the rule
+  that actually enforces the ceiling: decks balloon in later sessions when they start
+  carrying earlier material forward, and re-testing earlier material is already Part 6's
+  job through spaced/interleaved review. Keep the deck session-local and it cannot creep.
+- **Heavy weighting toward one concept is fine when that concept genuinely IS the
+  session's atom set** (an API session drilling six status-code cards is right, because
+  status codes are the highest-frequency recall material in the subject). Weighting is
+  only a problem when it reflects what was easy to write rather than what must be
+  automatic.
+
+If a session seems to need more than 18, that is a signal the SESSION is carrying too
+much, not that the deck should grow. Split the content instead.
 
 ## Part 6 — Quick check (the graded gate) + cumulative review
 

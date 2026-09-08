@@ -212,8 +212,8 @@ rest.
 ## Step 5: QA every session against the editorial rules (the definition of "done")
 
 A session is not finished when it renders. It is finished when it passes the
-**numbered checklist in `references/editorial-rules.md`** (26 rules as of
-2026-07-17; trust the file's own count over any number quoted elsewhere). These rules were derived by
+**numbered checklist in `references/editorial-rules.md`** (28 rules as of
+2026-08-31; trust the file's own count over any number quoted elsewhere). These rules were derived by
 hardening real sessions with a live learner, and each one closes a specific way a
 session quietly betrays the learner's trust: an exercise that grades a concept it
 never taught, a hint that leaks its own answer, a code font that draws `!=` as `≠`

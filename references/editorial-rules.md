@@ -1,6 +1,6 @@
 # Editorial rules (the QA checklist every session must pass)
 
-These 27 rules were derived by hardening real workbook sessions (a Python sprint,
+These 28 rules were derived by hardening real workbook sessions (a Python sprint,
 Sessions 1-10, then a SQL sprint) through editor passes with the learner. They are
 not style preferences: each one fixes a specific way a session quietly betrays a
 learner's trust (an unfair grade, a hint that leaks the answer, a glyph that
@@ -15,7 +15,11 @@ in rule 20) plus the level-0 environment-onboarding guidance in `SKILL.md`. Rule
 2026-07-17 so the checklist is one flat list with nothing skippable ("check all N"
 now genuinely covers everything). Rule 27 came from designing the Git track on
 2026-07-28, where a Level 5 built around the author's own repo and two-account
-GitHub setup would have been literally uncompletable by any other learner.
+GitHub setup would have been literally uncompletable by any other learner. Rule 28
+came from the learner browser-checking Git Session 2 on 2026-08-31 and reporting that
+a note box was hard to read: an audit found 25 of 56 text-on-background pairs failing
+WCAG AA across all three shipped tracks, worst case 2.81:1, which every automated gate
+had passed.
 
 **A session is NOT "done" until it passes every rule below.** Run this checklist
 against each session artifact before you publish it and before you tell the user
@@ -55,6 +59,9 @@ no author-with-Claude instructions in learner-facing copy · 26 house style: no 
 dashes
 
 **Portability:** 27 every session must be completable by a stranger
+
+**Colour and contrast:** 28 every text colour must clear WCAG AA on every surface it
+sits on
 
 ---
 
@@ -304,26 +311,50 @@ betrays trust just as an unfair grade does):
 subset, and every graded practice must persist and restore on reload.** Two
 failures this guards, both found late in the Python sprint:
 
-- **Parity.** The workbook has five graded practices: Part 1 hands-on tasks, Part 2
-  predict drills, Part 5 flashcards, Part 4 write-its, and the Part 6 quiz. The
-  engine once tracked only four and silently omitted the quiz, so the one pass/fail
-  gate had no panel presence. Give the strip a counter for all five (widen the grid
-  accordingly), count CORRECT answers for the auto-graded ones (drills, quiz), and
+**A workbook has SEVEN graded practices, and the two halves of this rule cover
+different subsets of them. Count them out before you decide anything:** Part 1
+hands-on tasks, Part 2 predict drills, **Part 3a Parsons**, **Part 3b faded /
+fill-in-the-blank**, Part 4 write-its, Part 5 flashcards, and the Part 6 quiz.
+Persistence covers all seven. The counter strip covers five of them, deliberately.
+
+- **Parity (five counters).** The strip carries a counter for Part 1 tasks, Part 2
+  drills, Part 5 cards, Part 4 write-its, and the Part 6 quiz. The engine once
+  tracked only four and silently omitted the quiz, so the one pass/fail gate had no
+  panel presence. Count CORRECT answers for the auto-graded ones (drills, quiz), and
   set each total dynamically from its item-array length so one layout serves any
-  question count (a 6-question session and a 10-question final both work). When you
-  add ANY new graded practice to the template, add its counter in the same pass.
-- **Persistence.** ALL graded practices persist to `localStorage` and restore on
-  reload, not just the checkbox-style tasks and write-its. Drills persist their
-  correctness and restore through a shared `markDone(ok)` helper (compute correct,
-  then persist, then mark, so live-check and restore share one path). Cards persist
-  a mastered-index set and are filtered out of the pile on reload. The quiz persists
-  per-question correctness and restores by replaying a synthetic click through the
-  page's OWN answer handler (which sidesteps the fact that the backlink and
-  final-message code diverges between sessions); note the reshuffle nuance: only
-  "answered" plus the score restore, not the exact wrong option the learner picked,
-  since options reshuffle each load. A counter that lives only in memory and resets
-  on refresh is the failure to avoid, it silently under-reports the learner's real
-  progress.
+  question count (a 6-question session and a 10-question final both work).
+  **Part 3 is deliberately NOT counted** (decided 2026-09-08): it still has to
+  persist, it just does not get a strip counter, because adding a sixth changes the
+  shared progress-panel layout on every session of every track. Revisit that as its
+  own design decision, never as a side effect of a persistence fix. When you add any
+  OTHER new graded practice to the template, add its counter in the same pass.
+- **Persistence (all seven).** EVERY graded practice persists to `localStorage` and
+  restores on reload, including the two that have no counter. The learner must be
+  able to close the tab mid-session and come back to exactly what they left; Export
+  and Import are a secondary convenience on the hosted site, never the mechanism that
+  makes progress durable. Drills persist their correctness and restore through a
+  shared `markDone(ok)` helper (compute correct, then persist, then mark, so
+  live-check and restore share one path). Cards persist a mastered-index set and are
+  filtered out of the pile on reload. The quiz persists per-question correctness and
+  restores by replaying a synthetic click through the page's OWN answer handler
+  (which sidesteps the fact that the backlink and final-message code diverges between
+  sessions); note the reshuffle nuance: only "answered" plus the score restore, not
+  the exact wrong option the learner picked, since options reshuffle each load.
+  **Parsons persists `{ok, order}`** (the verdict plus the learner's final arrangement)
+  and restores by moving those lines back into the solution column in the saved order,
+  then replaying the checked state. **Faded persists `{ok, vals}`** (the verdict plus
+  what they typed in each blank) and restores by refilling every blank, re-marking
+  each one, and re-showing the reveal. Both only persist on Check, matching drills.
+  A result that lives only in memory and resets on refresh is the failure to avoid,
+  it silently discards work the learner actually did.
+
+  **This half of the rule was under-specified until 2026-09-08 and the gap shipped.**
+  The original text opened "the workbook has five graded practices", omitting Part 3
+  entirely, so the engine faithfully persisted five and dropped Parsons and faded on
+  every reload. That survived four tracks (Python, SQL, Git, Animation) and every QA
+  pass, because the checklist itself was what was wrong. Rule 19 had it right all
+  along, listing Parsons and fill-in blanks among the graded items. When two rules
+  disagree about what counts as graded, the more inclusive list wins.
 
 ## Drill variety
 
@@ -437,3 +468,45 @@ places it recurs:
 This rule is the reason to separate "what the skill teaches" from "whose environment it
 was written on." The author's own setup is often the most convenient worked example, and
 using it is fine; requiring it is not.
+
+## Colour and contrast
+
+**28. Every palette token used to paint TEXT must clear WCAG AA (4.5:1) against every
+surface it is painted on, in BOTH light and dark mode.** Nothing in a workbook qualifies
+for the relaxed 3:1 "large text" allowance (that needs >=18.66px bold or >=24px regular),
+so 4.5:1 applies to all of it, including 10.5px micro-labels. Check every text token
+against every container background defined in the same palette: the page background, the
+card surface, the inset surface, and each tinted box (the success, warning, accent and
+error fills). Four things make this fail quietly:
+
+- **Audit each file against its OWN palette.** Tracks share role-named tokens but define
+  different values for them, so a ratio computed on one track is meaningless for another,
+  and a fix copied between tracks is simply wrong.
+- **Fix at the token level, not per rule.** Failures cluster: one pale token can break
+  fifteen selectors at once. Chasing the selectors hides the cause and guarantees you miss
+  the instances you did not happen to look at.
+- **Each token is declared more than once per mode**, typically once under
+  `prefers-color-scheme` and again under an explicit `[data-theme]` override. Change one
+  and the theme toggle keeps serving the old colour, so the bug survives in half the
+  states.
+- **Check light mode even if you built in dark**, and vice versa. In practice light mode
+  failed worse and was the mode nobody was looking at.
+- **Check text sitting on component FILLS, not just on container backgrounds.** A palette
+  that fills a button or a badge with its accent or warning colour needs a paired
+  "on-colour" token for the text on top, and that pair must clear 4.5:1 too. This is the
+  one that bites *while you are fixing the others*: darkening a fill token to make it
+  legible as text on a pale background simultaneously darkens the ground under any dark
+  on-colour text, so a fix in one place opens a failure in another. Re-audit the pairs
+  after every token change. A real instance went from 4.07 to **2.44** this way, caught
+  only because the pairs were re-checked before publishing.
+
+**The semantic half of this rule matters as much as the arithmetic.** A palette's faintest
+token exists for text that is *meant* to recede: uppercase micro-labels, counters, a
+shell name above a command. It must never carry prose the learner has to read. The
+original failure here was a note box, holding real instructions, painted in the token
+reserved for things you are allowed to skip. Passing 4.5:1 would not have made that
+right; prose belongs on a prose-weight token.
+
+Like rule 15, this bug is invisible to a grep of the source and invisible to any gate
+that checks structure or behaviour: the characters are all correct and the page renders
+fine. Only computing the ratios, or a human squinting at a real screen, finds it.
