@@ -364,9 +364,10 @@ and vary the cognitive TASK, not only the answer type.** A count
 but a count tests a proxy (how many pass) instead of the real skill (which results
 come back) and never touches what the learner actually produces. The four drill
 types are `value`, `set`, `seq`, and `count`, graded through one shared
-`gradeDrill(d, val)`; **the exact grader contract (normalizer, `toks()`, and the
-per-subject `caseFold` decision for case-insensitive subjects like SQL vs
-case-meaningful ones like Python) lives ONLY in `workbook-template.md` Part 2 —
+`gradeDrill(d, val)`, plus an optional per-drill `alt` list of other accepted
+SPELLINGS of the same answer; **the exact grader contract (normalizer, `toks()`,
+`alt`, and the per-subject `caseFold` decision for case-insensitive subjects like SQL
+vs case-meaningful ones like Python) lives ONLY in `workbook-template.md` Part 2 —
 read it there; do not restate or fork it.** That shared grader is what makes "which
 results?" a fair, deterministic drill: without it the grader can match only one
 token, which is the very reason drills collapse to counts. GUIDANCE: ask `value`

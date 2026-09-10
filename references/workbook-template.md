@@ -69,11 +69,41 @@ always reveal *why*.
   change it HERE and fix the pointers, never fork the spec). Give each drill an
   explicit `type` and grade through one shared `gradeDrill(d, val)`:
   - `count` and `value` (a single result, or "which is first") match exactly via the
-    normalizer: trim, strip trailing `[.;]+`, and, when `caseFold` is on (below),
+    normalizer: trim, strip trailing `[.;:]+`, and, when `caseFold` is on (below),
     lowercase both sides.
   - `set` (all results, any order) and `seq` (results in order) tokenize both sides
-    with `toks(s) = s.toLowerCase().trim().split(/[\s,.;]+/).filter(Boolean)` then
+    with `toks(s) = s.toLowerCase().trim().split(/[\s,.;:]+/).filter(Boolean)` then
     compare sorted (set) or in order (seq).
+  - **The colon in both of those character classes is load-bearing** (added 2026-09-08,
+    from the API track). When a subject prints names in a form that carries a colon (an
+    HTTP header list reads `content-type: application/json`), a learner who copies the
+    names exactly as the drill printed them produces tokens that all end in a colon and
+    fails a fully correct answer. Earlier tracks stripped the colon in `norm()` only, so
+    `value` answers were safe and every `set`/`seq` answer was not. If you are porting an
+    older session, check both.
+  - **An optional `alt` array holds other accepted SPELLINGS of the same answer**, tried
+    after the exact match fails:
+
+        function gradeDrill(d, val) {
+          if (d.type === 'set') { /* sorted toks compare */ }
+          if (d.type === 'seq') { /* in-order toks compare */ }
+          if (norm(val) === norm(d.ans)) return true;
+          if (d.alt) { for (var i = 0; i < d.alt.length; i++) { if (norm(val) === norm(d.alt[i])) return true; } }
+          return false;
+        }
+
+    This is a fairness fix, not a convenience. A quantity can honestly be typed as a digit
+    or a word and no format nudge makes one of them the obviously-intended form, so a
+    single accepted string turns understanding into a coin flip on wording. Added after an
+    API session shipped one drill demanding `0` and another four items later demanding
+    `two`: each was individually defensible, and arbitrary taken together.
+    **`alt` never accepts a DIFFERENT answer, only a different spelling of the correct
+    one.** `ans: '0', alt: ['zero', 'none', 'no bytes']` is right; putting a wrong answer
+    in `alt` stops the drill testing anything. Prefer it over a stricter ask: "answer with
+    a digit, not a word" is a real instruction a learner can miss, and gating a correct
+    understanding on it is the unfair grade rule 7 forbids. Verify with a small test
+    harness asserting both the accepts and the REJECTS, since an over-broad `alt` fails
+    silently and no gate catches it.
   - **`caseFold` is a per-subject decision, made consciously at track-build time.**
     Turn it ON for subjects whose answers are case-insensitive (SQL: `NULL` and
     `null` are the same answer, and grading `null` wrong is exactly the unfair-grade
