@@ -72,25 +72,47 @@ always reveal *why*.
     normalizer: trim, strip trailing `[.;:]+`, and, when `caseFold` is on (below),
     lowercase both sides.
   - `set` (all results, any order) and `seq` (results in order) tokenize both sides
-    with `toks(s) = s.toLowerCase().trim().split(/[\s,.;:]+/).filter(Boolean)` then
-    compare sorted (set) or in order (seq).
-  - **The colon in both of those character classes is load-bearing** (added 2026-09-08,
-    from the API track). When a subject prints names in a form that carries a colon (an
-    HTTP header list reads `content-type: application/json`), a learner who copies the
-    names exactly as the drill printed them produces tokens that all end in a colon and
-    fails a fully correct answer. Earlier tracks stripped the colon in `norm()` only, so
-    `value` answers were safe and every `set`/`seq` answer was not. If you are porting an
-    older session, check both.
-  - **An optional `alt` array holds other accepted SPELLINGS of the same answer**, tried
-    after the exact match fails:
+    with `toks(s) = s.toLowerCase().trim().split(/[\s,.;:"'‘’“”]+/).filter(Boolean)`
+    then compare sorted (set) or in order (seq).
+  - **The punctuation in that character class is load-bearing, and it is the single most
+    repeated fairness bug in this engine's history.** The rule: **whatever punctuation a
+    subject prints AROUND an answer token belongs in this split class, and belongs in the
+    grader harness as a test case.** Two instances, both found by a reviewer rather than by
+    the author, both in the same two drills, two days apart:
+    - **the colon** (2026-09-08, API track). An HTTP header list prints
+      `content-type: application/json`, so a learner copying the names as shown answers
+      `content-type:, etag:` and every token carries a trailing colon.
+    - **quotes** (2026-09-10, API track). JSON field names print as `"userId"`, so the same
+      learner answers `"userId", "id"` and every token carries quotes. Curly quotes are in
+      the class too, because a word processor or chat client substitutes them silently.
+
+    `norm()` strips this punctuation already, so `count`/`value` answers were always safe
+    and every `set`/`seq` answer was not: the `set` and `seq` branches never reach `norm()`.
+    **That asymmetry is why this keeps recurring, so check `toks()` specifically when
+    porting an older session, and do not assume a green harness settles it** (see the
+    harness warning below).
+  - **An optional `alt` array holds other accepted SPELLINGS of the same answer.** Compare
+    each candidate through **one shared `matchesOne(d, val, ans)`** so that `alt` reaches
+    every drill type:
+
+        function matchesOne(d, val, ans) {
+          if (d.type === 'set') { /* sorted toks compare of val vs ans */ }
+          if (d.type === 'seq') { /* in-order toks compare of val vs ans */ }
+          return norm(val) === norm(ans);
+        }
 
         function gradeDrill(d, val) {
-          if (d.type === 'set') { /* sorted toks compare */ }
-          if (d.type === 'seq') { /* in-order toks compare */ }
-          if (norm(val) === norm(d.ans)) return true;
-          if (d.alt) { for (var i = 0; i < d.alt.length; i++) { if (norm(val) === norm(d.alt[i])) return true; } }
+          var cands = [d.ans].concat(d.alt || []);
+          for (var i = 0; i < cands.length; i++) { if (matchesOne(d, val, cands[i])) return true; }
           return false;
         }
+
+    **Do not write this as branch-and-return with the `alt` loop appended at the end**
+    (the shape shipped between 2026-09-08 and 2026-09-10). The `set` and `seq` branches
+    returned before the loop, which made `alt` dead code for exactly the two types whose
+    answers have the most valid spellings. It went unnoticed because the only `alt` in
+    play was on a `count` drill, which travels the `value` path and therefore passed.
+    **A harness must assert `alt` reachability PER TYPE**, not on one drill.
 
     This is a fairness fix, not a convenience. A quantity can honestly be typed as a digit
     or a word and no format nudge makes one of them the obviously-intended form, so a
@@ -104,6 +126,16 @@ always reveal *why*.
     understanding on it is the unfair grade rule 7 forbids. Verify with a small test
     harness asserting both the accepts and the REJECTS, since an over-broad `alt` fails
     silently and no gate catches it.
+  - **A passing grader harness is not evidence that grading is fair.** None of the five
+    gates ever executes the grader against learner input, so this harness is the only
+    check there is, which makes how you choose its cases the whole ballgame. **Derive them
+    from what the session PRINTS ON SCREEN, not from what the grader looks like it
+    accepts:** open each transcript a drill refers to, copy the answer token exactly as a
+    learner would see it (punctuation and all), and assert that form. The 2026-09-10 quote
+    bug survived a harness that passed 38/38 because every case in it was a form the
+    previous fix had already handled, so the harness only ever confirmed the patch it was
+    written from. Test the CLASS, not the patch: ask "what punctuation wraps this token in
+    this subject?" and "does this feature work on every type, or just the one I tried?"
   - **`caseFold` is a per-subject decision, made consciously at track-build time.**
     Turn it ON for subjects whose answers are case-insensitive (SQL: `NULL` and
     `null` are the same answer, and grading `null` wrong is exactly the unfair-grade
