@@ -32,7 +32,8 @@ past it.
 show-what-it-looks-like transcripts · 4 solutions use only taught patterns · 5
 teach old-way-vs-new-way contrast · 6 patch the material, not the learner
 
-**Exercise fairness / feedback:** 7 never grade untaught concepts · 8 hints must
+**Exercise fairness / feedback:** 7 never grade untaught concepts, and never reject a
+correct answer · 8 hints must
 never contain the answer · 9 shuffle MCQ answers · 10 deep-link wrong answers to
 the source concept
 
@@ -62,6 +63,27 @@ dashes
 
 **Colour and contrast:** 28 every text colour must clear WCAG AA on every surface it
 sits on
+
+### Which of these a machine can check
+
+Added 2026-09-10, after three grader defects shipped past five green gates in four
+days. The point is not the list, it is that **a green run does not mean the session
+is compliant**, and until now nothing said which rules it actually covered.
+
+- **A gate checks these:** 7 (`check-grader.js`), 9 (`check-quiz.py`), 10, 13, 14, 15,
+  20, 23, 25, 26 (`check-structure.js`), 22 (`verify-restore.js`), 24 (`scan_js.py`
+  plus `check-js.js`). The tooling lives beside this skill rather than inside it,
+  because the skill ships rules and the gates are author-side.
+- **A procedure exists, but a person performs it:** 18 and 19 (run every snippet, and
+  trace every graded item, both with an independent adversarial reviewer), 28 (compute
+  the contrast ratio for each text token against each surface it is painted on).
+- **No procedure exists. A person must read for these, and no gate will ever tell you
+  they are broken:** 1, 2, 4, 5, 6, 8, 11, 12, 16, 17, 21, 27.
+
+Rule 8 sits in that last group deliberately. `check-grader.js` emits a shortlist of
+drills whose answer appears in earlier text, but it cannot separate a concept being
+taught from an answer being revealed, and a first attempt that tried to produced about
+sixty false failures. Treat its output as somewhere to look, never as a verdict.
 
 ---
 
@@ -107,6 +129,25 @@ feedback must address the LIKELY ACTUAL mistake**, not only the intended lesson.
 (The "print separates with a space, not a comma" case: the feedback has to catch
 what the learner really typed.)
 
+**A grader that rejects a correct answer breaks this rule as surely as one that grades
+an untaught concept, and that half of it has a mechanical check.** Run `check-grader.js`
+over every session before it ships. It is an author-side gate and lives in the hosting
+toolkit beside this skill rather than inside it, because it is tooling and the skill
+ships rules. It pulls the session's real `norm`, `toks`, `matchesOne`, `gradeDrill`,
+`DRILLS` and `FADED` out of the shipped file and runs them, and it derives its cases
+from the file instead of taking a list: for each answer token it finds that token in the
+session's own transcripts, captures the punctuation actually wrapping it there, and
+asserts the grader accepts that form. It also asserts `alt` reaches every drill type,
+that each drill still REJECTS a near miss, and that the faded comparator, which is a
+separate code path, holds up.
+
+**A green run is necessary and not sufficient.** The reason is on the record: a
+hand-written harness passed 38 of 38 while a live defect sat in the two drills it was
+written for, because every case in it was a form the previous fix had already handled.
+The gate closes the class those defects came from. It does not close rule 7, and an
+`ask` that names the accepted spelling is still the better fix when an answer has
+several honest forms.
+
 **8. A placeholder or hint must NEVER contain the answer.** (The `e.g. 20 15` bug,
 where the example input *was* the expected output.) The recurring offender is an
 inline code *comment* in a faded or Parsons snippet that names the very token being
@@ -124,6 +165,13 @@ the tool prints it") from a concept giveaway.
 **9. Never fix the correct multiple-choice answer in a constant slot.** Shuffle
 options at render time and reshuffle on reset. (The "all correct answers were
 option A" bug.)
+
+**Shuffling fixes position, not length.** The correct option drifts into being the
+longest one, because it is the one carrying the caveat, and then "pick the longest"
+passes the quiz without knowing anything. `check-quiz.py` scores both heuristics and
+fails a session that either one beats; aim for the correct option sitting mid-pack on
+length, not at an extreme. Do not aim at 0 on one heuristic alone: driving the correct
+answer to always-shortest is the same exploit inverted.
 
 **10. When a learner gets something wrong, link them back to the EXACT source
 concept** via a deep link, not "go review Part 1."
@@ -150,12 +198,36 @@ hash anchors reload the iframe and wipe in-memory progress.
 
 **15. Disable programming ligatures on all code/mono elements.** Set
 `font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0;` on
-`code, pre, textarea, input` (and anything using the mono stack). Cascadia Code
+`body, input, textarea, button, select`. Cascadia Code
 (a common Windows default mono) otherwise renders `!=` as `≠`, `>=`/`<=` as
 `≥`/`≤`, `->` as `→`, `=>` as `⇒`, even inside `<pre>`. In a workbook that teaches
 the exact characters to type, a ligated glyph is actively wrong (a learner would
 try to type `≠`). The source stays ASCII and the font does the transforming, so a
 grep for the glyphs finds nothing: you must set the CSS, not search-and-replace.
+
+**Declare it once on `body`, never as a list of mono selectors.** Both properties
+are INHERITED, so one declaration on `body` reaches every element on the page. The
+four form controls are named alongside it only because browsers do not inherit font
+properties into them. This is not a style preference, it is the difference between a
+rule that holds and one that rots:
+
+- **An enumerated list goes stale silently.** It has to be extended by hand every
+  time any selector takes `var(--mono)`, and nothing fails when someone forgets. Four
+  tracks were audited on 2026-09-10 and all four had drifted: 7 of 27 selectors
+  covered, 7 of 26, 5 of 25, 2 of 23. The symptom was on the FIRST LINE of every one
+  of those pages, where the eyebrow reads `Session 05 // Level 3` and the unlisted
+  `.crumb` drew the `//` as one joined glyph.
+- **A list cannot reach an inline style at all.** An element that takes
+  `var(--mono)` from a `style="..."` attribute is invisible to every CSS selector
+  list, so no amount of diligence fixes it. Three such elements were found per file
+  on two tracks.
+- **A list cannot cover what tooling injects later.** A hosting step added a mono
+  button to 36 published files; no track's list named it, because it does not exist
+  in any source file the author ever edits.
+
+Checking it is then one assertion (does `body` carry the declaration) instead of
+diffing two selector sets, which is the only reason this rule is mechanically
+checkable at all.
 
 ## Teaching altitude
 
@@ -311,6 +383,10 @@ betrays trust just as an unfair grade does):
 subset, and every graded practice must persist and restore on reload.** Two
 failures this guards, both found late in the Python sprint:
 
+*Checked by `verify-restore.js`, which seeds a saved state into a stub localStorage
+and asserts every section rebuilds from it. A first visit exercises none of the
+restore branches, so nothing else in the toolkit ever executes that code.*
+
 **A workbook has SEVEN graded practices, and the two halves of this rule cover
 different subsets of them. Count them out before you decide anything:** Part 1
 hands-on tasks, Part 2 predict drills, **Part 3a Parsons**, **Part 3b faded /
@@ -412,7 +488,9 @@ passed:
   single or double quoted literal left unterminated at a line break and (b) checks
   bracket balance with strings/comments stripped catches this class definitively.
   PREFER REWORDING to avoid an apostrophe over escaping it (`\'` is fragile to future
-  edits).
+  edits). *That script exists: `scan_js.py` tokenizes and checks bracket balance, and
+  `check-js.js` then evaluates the script against a stub document, which catches a
+  break that parses but throws on load.*
 - **A single long line can blow out a fixed layout.** See the Parsons-layout note in
   `workbook-template.md`: two-column default uses `minmax(0, 1fr)` tracks (not plain
   `1fr`); switch the whole sprint to a single full-width column only when its tiles

@@ -126,16 +126,24 @@ always reveal *why*.
     understanding on it is the unfair grade rule 7 forbids. Verify with a small test
     harness asserting both the accepts and the REJECTS, since an over-broad `alt` fails
     silently and no gate catches it.
-  - **A passing grader harness is not evidence that grading is fair.** None of the five
-    gates ever executes the grader against learner input, so this harness is the only
-    check there is, which makes how you choose its cases the whole ballgame. **Derive them
-    from what the session PRINTS ON SCREEN, not from what the grader looks like it
-    accepts:** open each transcript a drill refers to, copy the answer token exactly as a
-    learner would see it (punctuation and all), and assert that form. The 2026-09-10 quote
-    bug survived a harness that passed 38/38 because every case in it was a form the
-    previous fix had already handled, so the harness only ever confirmed the patch it was
-    written from. Test the CLASS, not the patch: ask "what punctuation wraps this token in
-    this subject?" and "does this feature work on every type, or just the one I tried?"
+  - **Do not hand-write the grader harness. Run `check-grader.js`** (rule 7 in
+    `editorial-rules.md` describes it; it is an author-side gate and lives in the hosting
+    toolkit beside this skill, not inside it). It extracts this session's real comparators
+    and runs them, and it DERIVES its cases from the file: it finds each answer token in
+    the session's own transcripts, captures the punctuation actually wrapping it there,
+    and asserts the grader accepts that form, plus `alt` reachability per type, the
+    rejects, and the faded comparator.
+  - **A passing grader harness is still not evidence that grading is fair.** The gate was
+    written after the fact and closes exactly the class that produced the colon, quote and
+    `alt` defects; it does not close rule 7. **The habit it automates is the one to keep:
+    derive cases from what the session PRINTS ON SCREEN, not from what the grader looks
+    like it accepts.** The 2026-09-10 quote bug survived a hand-written harness that
+    passed 38/38, because every case in it was a form the previous fix had already
+    handled, so the harness only ever confirmed the patch it was written from. Test the
+    CLASS, not the patch: ask "what punctuation wraps this token in this subject?" and
+    "does this feature work on every type, or just the one I tried?" When a gate row is
+    arguable rather than wrong, prefer naming the accepted spelling in the `ask` over
+    widening the split class until it stops discriminating.
   - **`caseFold` is a per-subject decision, made consciously at track-build time.**
     Turn it ON for subjects whose answers are case-insensitive (SQL: `NULL` and
     `null` are the same answer, and grading `null` wrong is exactly the unfair-grade

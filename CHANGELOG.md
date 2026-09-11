@@ -2,6 +2,17 @@
 
 All notable changes to this skill, newest first.
 
+## 2026-09-10 (rule 7 gets a procedure, rule 15 stops being a list)
+
+Rule 7 was the only fairness rule with no way to check it, and it shipped three defects in four days (the colon, quotes, and `alt` unreachable for `set`/`seq`). It now points at one. No rule-count change (still 28).
+
+- **Rule 7 now names `check-grader.js`** and says what it asserts: it extracts the session's real `norm`, `toks`, `matchesOne`, `gradeDrill`, `DRILLS` and `FADED` out of the shipped HTML and runs them, deriving its cases from the file rather than taking a list. For every answer token it locates that token in the session's own transcripts, captures the punctuation actually wrapping it there, and asserts the grader accepts that form. It also asserts `alt` reachability per type, the rejects, and the faded comparator.
+- **The gate deliberately lives in the hosting toolkit, not in this skill.** The skill ships rules; the tooling is author-side and stays out of the public repo, which is the same line rule 27 draws. The rule names the tool and what it does without naming a path, so a stranger reading the rule still learns the procedure.
+- **Corrected a claim in `workbook-template.md` that this change made false.** The harness bullet said none of the gates ever executes the grader against learner input, so the hand-written harness was the only check there is. One does now. The bullet now says to run the gate rather than hand-write a harness, and keeps the warning that a green run is necessary and not sufficient, since the gate was written after the fact and closes only the class those three defects came from.
+- Recorded the preference the gate cannot apply for you: when a finding is arguable rather than wrong, name the accepted spelling in the `ask` instead of widening the split class until it stops discriminating.
+
+**Rule 15 now declares ligatures off once on `body`, instead of enumerating mono selectors.** Both `font-variant-ligatures` and `font-feature-settings` are inherited, so one declaration reaches every element; the four form controls are named alongside it only because browsers do not inherit font properties into them. The enumerated list was audited across four tracks on 2026-09-10 and every one had drifted (7 of 27 selectors covered, 7 of 26, 5 of 25, 2 of 23), with the symptom on the first line of each page: the eyebrow reads `Session 05 // Level 3`, Cascadia Code ligates `//`, and `.crumb` was not on any of those lists. Two failure modes make the list approach unfixable rather than merely neglected, and both were found in the same audit: an element taking `var(--mono)` from an inline `style` attribute is invisible to any selector list, and a hosting step injected a mono button into 36 published files that no author-edited source contains. The rule keeps the ratio-style reasoning and gains a one-line check, since asserting `body` carries the declaration replaces diffing two selector sets.
+
 ## 2026-09-10 (grader fairness, second pass: quotes, and `alt` for every type)
 
 Two more amendments to the canonical grader contract in `workbook-template.md` Part 2, both found on API Session 3 by the adversarial reviewer, both **in the same two drills the colon fix had already touched two days earlier**. No rule-count change (still 28).

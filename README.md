@@ -56,7 +56,7 @@ cumulative quiz.
 It is live here: **https://skillhub-archive.github.io/**
 
 The lessons from building and hardening that sprint (a session template, the learning
-rationale, and 27 editorial and QA rules that each close a specific way a lesson can
+rationale, and 28 editorial and QA rules that each close a specific way a lesson can
 quietly mislead a learner) are baked into this skill, so it applies the same standard
 to whatever subject you point it at.
 
