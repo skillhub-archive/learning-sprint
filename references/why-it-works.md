@@ -71,6 +71,25 @@ Keep this list current as the format evolves; it's the rationale future-you need
 - **Spaced + interleaved cumulative review** — durable retention over cramming.
 - **The "20%" is chosen against the learner's stated goal**, not a generic syllabus.
 
+Added as later tracks (SQL, Git, APIs) exposed them:
+- **Typed drill answers through one shared grader** (value, count, set, seq, plus `alt`
+  spellings) over counting everything: a count tests a proxy, not what the learner
+  produces. The contract lives in `workbook-template.md` Part 2.
+- **Grade what the learner would actually type**: punctuation a subject prints around an
+  answer, and quote styles a device substitutes, must not fail a correct answer. Per-subject
+  flags (`caseFold`, `parenLabels`) are decided before drills are written, not after a
+  failure.
+- **All seven graded practices persist**, so closing the tab mid-session never loses work;
+  five of them carry a visible counter.
+- **Flashcard decks float (12 to 16, cap 18)**, sized to the atoms a session really has,
+  rather than a fixed count that pads or truncates.
+- **Tracks share one family skeleton** and differ only by accent, copy and a small hero
+  specimen, so a learner moving between tracks is never relearning the interface.
+- **A bonus workbook is standard on every track**: twenty hours builds working knowledge,
+  and the bonus is the honest next climb, kept outside the graded score.
+- **Every session is completable by a stranger** (rule 27): nothing required depends on the
+  author's accounts, machine or setup.
+
 ## Sources
 
 - Retrieval + spaced practice: evidencebased.education/resource/retrieval-and-spaced-practice-study-strategies-that-must-be-combined/

@@ -10,7 +10,7 @@ to the session's place in the 5-level arc.
 
 ## Header
 
-- Eyebrow crumb: `Session NN // Level L · <Level name> · Workbook`
+- Eyebrow crumb: `Session NN // Level L · <Level name>`
 - A **back-to-Hub link** (the Hub's published URL, `target="_blank"`).
 - H1 session title; one-line goal.
 - A **milestone chip**: "You can now do X, unassisted."
@@ -19,7 +19,8 @@ to the session's place in the 5-level arc.
   workbook, not a reading. Producing it is what makes it stick.**
 - A progress strip with the 5 headline "doing" metrics (Hands-on done / Drills
   correct / Cards mastered / Write-its done / Quiz correct), each persisted via
-  `localStorage` and restored on reload, plus a reset. Every graded practice feeds
+  `localStorage` and restored on reload, plus a reset. Every graded practice except
+  Part 3 (Parsons and faded, which persist but deliberately carry no counter) feeds
   one of these counters (count CORRECT for the auto-graded drills and quiz; set each
   total from its item-array length so one layout serves any question count), so
   nothing the learner does is invisible or lost on refresh. See the progress-panel
@@ -69,9 +70,11 @@ always reveal *why*.
   change it HERE and fix the pointers, never fork the spec). Give each drill an
   explicit `type` and grade through one shared `gradeDrill(d, val)`:
   - `count` and `value` (a single result, or "which is first") match exactly via the
-    normalizer: trim, strip one pair of quotes (straight `"` `'` or curly `“ ”` `‘ ’`)
-    wrapping the WHOLE answer, strip trailing `[.;:]+`, and, when `caseFold` is on
-    (below), lowercase both sides.
+    normalizer: trim and collapse every run of whitespace to one space, strip one pair
+    of quotes (straight `"` `'` or curly `“ ”` `‘ ’`) wrapping the WHOLE answer, strip
+    trailing `[.;:]+` **only when something survives the strip** (otherwise the answer
+    `.` normalizes to empty and `;` or `...` grade as correct), and, when `caseFold` is
+    on (below), lowercase both sides.
     When `parenLabels` is on (below), `matchesOne` also drops parentheses wrapping
     the whole answer on this path, never inside `norm()` itself.
   - `set` (all results, any order) and `seq` (results in order) tokenize both sides
@@ -103,7 +106,11 @@ always reveal *why*.
     macOS setups) could fail a quoted `value` answer. The curly pair is now part of the
     contract; **sessions shipped before that date still strip straight quotes only**, left
     as-is deliberately because no page prints a curly-quoted answer, so bring `norm()` up to
-    the contract whenever one of them is next edited. **That asymmetry is why this keeps
+    the contract whenever that session's GRADER code is next edited (a copy or colour edit
+    elsewhere in the file does not count). The Python and SQL tracks' graders predate more
+    of the contract than this (no trailing-punctuation strip; Python has no typed drills at
+    all), so **never clone a Python or SQL session as a grader template**; clone the newest
+    API or Git session instead. **That asymmetry is why this keeps
     recurring, so check `toks()` specifically when
     porting an older session, and do not assume a green harness settles it** (see the
     harness warning below).
@@ -139,9 +146,9 @@ always reveal *why*.
     one.** `ans: '0', alt: ['zero', 'none', 'no bytes']` is right; putting a wrong answer
     in `alt` stops the drill testing anything. Prefer it over a stricter ask: "answer with
     a digit, not a word" is a real instruction a learner can miss, and gating a correct
-    understanding on it is the unfair grade rule 7 forbids. Verify with a small test
-    harness asserting both the accepts and the REJECTS, since an over-broad `alt` fails
-    silently and no gate catches it.
+    understanding on it is the unfair grade rule 7 forbids. `check-grader.js` (next
+    bullet) asserts each drill still rejects a near-miss, but **no gate can tell a wrong
+    `alt` from a legitimate spelling**, so read every `alt` entry by hand.
   - **Do not hand-write the grader harness. Run `check-grader.js`** (rule 7 in
     `editorial-rules.md` describes it; it is an author-side gate and lives in the hosting
     toolkit beside this skill, not inside it). It extracts this session's real comparators
@@ -406,10 +413,11 @@ LAST session ships that copy is stale and must be swapped to completed-state wor
   links to it).
 - **The artifact is a fragment, not a full document.** The publish step wraps your
   file in the `<!doctype html>…<head>…</head><body>` skeleton, so do NOT write your
-  own `<head>`, `<title>`, or `<link rel="icon">`. Set the **title** and the
-  **favicon** (an emoji matched to the subject, e.g. 🐍 for Python) through the
-  publish parameters, not in the file. The real Session 1 begins directly at
-  `<style>` for this reason.
+  own `<head>` or `<link rel="icon">`. Put a `<title>` as the fragment's first line
+  (the publish step reads the title from it; the tool's title parameter is only a
+  fallback), and pass the tab icon through the publish step's `icon` parameter as one
+  short generic word on the first publish (the older emoji `favicon` parameter is
+  deprecated). Sessions begin at `<title>` then `<style>` for this reason.
 - **Palette tokens are role-named, not color-named**, so a new subject reskins by
   changing values, not selectors: `--accent` (the accent/brand hue), `--gold*` (the
   milestone/"level unlocked" highlight), `--ink*` (the neutral text ramp),

@@ -40,7 +40,10 @@ The general form of every part, and how it maps across domains:
 - **Part 2 "Predict/trace"** = *predict the result, then check.*
   - Code: predict program output; trace variable values.
   - Excel: predict what a formula returns; trace a cell's dependency chain.
-  - Language: read a sentence, predict its meaning / the correct conjugation.
+  - Language: read a sentence, predict the correct conjugation or the one word that
+    completes it. The grader is exact-match, so never grade a free-text translation or
+    "meaning": ask for a single token (with `alt` for real variant spellings), or make
+    the meaning question a multiple-choice quiz item instead.
   - Music theory: name the chord/interval before revealing.
   - Chess: predict the best move / the consequence of a move.
   - Vary the answer type across drills (a single value, a count, the full set of

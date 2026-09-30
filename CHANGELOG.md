@@ -2,6 +2,20 @@
 
 All notable changes to this skill, newest first.
 
+## 2026-09-30 (audit pass: what the rules claim versus what the gates and engine do)
+
+A full audit of the skill against the shipped engine and the author-side gates. No rule-count change (still 28). Each item below was verified against the files, then checked by an independent reviewer.
+
+- **"Which of these a machine can check" is now honest about coverage.** It had credited rules 15 and 23 to the structure gate (it checks neither), omitted rule 3 entirely, and implied full coverage where a gate covers only part of a rule. It now says what each gate actually proves (for example, the restore gate proves restore runs without throwing, not that saved state visibly returns), moves 15 to the no-procedure list (the rule describes a check no gate implements), and names the ungated halves of 22 and 23. The principle-only list is 1, 2, 3, 4, 5, 6, 8, 11, 12, 15, 16, 17, 21, 27, and the rule-18 reviewer's re-read is stated as the only coverage those get.
+- **Rule 22's heading no longer contradicts its body.** It said a counter for EVERY graded practice; the body (correctly) says five of seven, with Part 3 deliberately uncounted. The template's progress-strip bullet had the same contradiction and is fixed too.
+- **Grader contract now states two things `norm()` always did**: collapse runs of whitespace, and strip trailing punctuation only when something survives (the guard that stops `.` normalizing to empty). It also warns never to clone a Python or SQL session as a grader template, since both predate more of the contract.
+- **The harness bullet no longer contradicts the next one**: `check-grader.js` asserts near-miss rejects, but no gate can tell a wrong `alt` from a legitimate spelling, so every `alt` is read by hand.
+- **Publishing note updated**: a fragment starts with `<title>` (the publish step reads it), and the tab icon is one generic word via `icon`; the emoji `favicon` parameter is deprecated. The eyebrow crumb drops a "· Workbook" suffix no track ever used.
+- **Step 5 now points at the machine-check section**, so a green run of every gate is not mistaken for compliance.
+- **domain-adaptation.md** no longer suggests grading a free-text "meaning" in a language drill, which the exact-match grader cannot do fairly; it steers to a single token, `alt`, or a quiz item.
+- **why-it-works.md's decision log** had stopped at the Python build; it now records the typed grader, grading what the learner would really type, seven-practice persistence, the floating deck, the shared family skeleton, the standard bonus, and rule 27.
+- **Found by the same audit in shipped tracks (fixed there, recorded here because each is a class to watch for):** 23 cross-session references that were wrong or promised something no session teaches, across Python, SQL and Git; faint-token text carrying real prose (footers, Parsons instructions, certification notes, captions) on every track; and leftover build-on-demand copy ("ask for Session N") on nine SQL sessions that the structure gate could not see because it lived in a JS string. That gate now also scans for that phrasing.
+
 ## 2026-09-30 (grader flags are decided before building, and parentheses become one)
 
 The first full sweep of the grader gate after a three-week break found parentheses to be the third instance of the "punctuation wrapping an answer token" class, on the git track. No rule-count change (still 28).

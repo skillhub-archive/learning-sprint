@@ -70,15 +70,23 @@ Added 2026-09-10, after three grader defects shipped past five green gates in fo
 days. The point is not the list, it is that **a green run does not mean the session
 is compliant**, and until now nothing said which rules it actually covered.
 
-- **A gate checks these:** 7 (`check-grader.js`), 9 (`check-quiz.py`), 10, 13, 14, 15,
-  20, 23, 25, 26 (`check-structure.js`), 22 (`verify-restore.js`), 24 (`scan_js.py`
-  plus `check-js.js`). The tooling lives beside this skill rather than inside it,
+- **A gate checks these (often only part of the rule; see each rule's own note):**
+  7 and the answer-type half of 23 (`check-grader.js`), 9 (`check-quiz.py`: option
+  length and position, not the shuffle itself), 10, 13, 14, 20, 25, 26
+  (`check-structure.js`: 10 and 13 confirm the mechanism exists, 20 covers Check buttons
+  only, 25 matches two known phrasings, "ask Claude to build" and "ask for Session N", so
+  any other wording still needs a read), the persistence half of 22 (`verify-restore.js`, which proves restore runs
+  without throwing, not that saved state visibly returns), 24 (`scan_js.py`, `check-js.js`,
+  `verify-session.js`, plus opening the page). The tooling lives beside this skill rather than inside it,
   because the skill ships rules and the gates are author-side.
 - **A procedure exists, but a person performs it:** 18 and 19 (run every snippet, and
   trace every graded item, both with an independent adversarial reviewer), 28 (compute
   the contrast ratio for each text token against each surface it is painted on).
 - **No procedure exists. A person must read for these, and no gate will ever tell you
-  they are broken:** 1, 2, 4, 5, 6, 8, 11, 12, 16, 17, 21, 27.
+  they are broken:** 1, 2, 3, 4, 5, 6, 8, 11, 12, 15, 16, 17, 21, 27. (Rule 15 describes a
+  check, but no gate implements it.) Plus the ungated halves of otherwise-gated rules: the
+  counter half of 22 and the cognitive-task half of 23. The rule-18 reviewer's
+  re-read is the only coverage most of these get, so it is not optional.
 
 Rule 8 sits in that last group deliberately. `check-grader.js` emits a shortlist of
 drills whose answer appears in earlier text, but it cannot separate a concept being
@@ -276,7 +284,8 @@ reliable guard against surprises a non-expert cannot eyeball, e.g. float precisi
 solutions that error, and simply-wrong answers. Running is authoritative on OUTPUT
 but blind to TEACHING QUALITY, so pair it with an INDEPENDENT, ADVERSARIAL reviewer
 pass, ideally a separate agent prompted to FIND problems (assume bugs until proven
-otherwise), that runs this check itself and re-reads against rules 1-17. An
+otherwise), that runs this check itself and re-reads against rules 1-17 (for the rules listed
+under "No procedure exists" above, that re-read is the only coverage they get). An
 independent agent re-checking beats the author confirming their own work.
 **Diff output EXACTLY: never normalize trailing newlines or whitespace** (no
 `rstrip`/`.strip()` on both sides before comparing) or the runner silently masks
@@ -379,12 +388,15 @@ betrays trust just as an unfair grade does):
 
 ## Progress panel
 
-**22. The progress strip must carry a counter for EVERY graded practice, not a
-subset, and every graded practice must persist and restore on reload.** Two
+**22. The progress strip must carry a counter for every counted practice (five of
+the seven graded practices; Part 3 is deliberately uncounted), and all seven graded
+practices must persist and restore on reload.** Two
 failures this guards, both found late in the Python sprint:
 
-*Checked by `verify-restore.js`, which seeds a saved state into a stub localStorage
-and asserts every section rebuilds from it. A first visit exercises none of the
+*Partly checked by `verify-restore.js`, which seeds a saved state into a stub
+localStorage and proves the restore path runs without throwing and every section still
+renders. It does not prove the saved state visibly comes back or that counters restore:
+reload the published page for that. A first visit exercises none of the
 restore branches, so nothing else in the toolkit ever executes that code.*
 
 **A workbook has SEVEN graded practices, and the two halves of this rule cover

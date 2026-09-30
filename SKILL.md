@@ -228,7 +228,10 @@ so the learner types the wrong character, a "correct" MCQ answer always sitting 
 slot A. **Run the checklist before you publish and before you tell the user a
 session is ready.** A faithful clone of the template starts compliant, but new
 content is exactly where rule-breaks creep back in, so verify every time rather than
-assuming. Rules 18 and 19 are the closing gate and both need doing per session:
+assuming. `editorial-rules.md` opens with a "Which of these a machine can check"
+section: read it, because a green run of every author-side gate still leaves most rules
+uncovered, and it lists exactly which ones a person must read for.
+Rules 18 and 19 are the closing gate and both need doing per session:
 **rule 18** runs every snippet and diffs its real output against every claimed output,
 and **rule 19** traces every graded item back to where its concept was taught so
 nothing is tested before it is taught. Run both with an INDEPENDENT, ADVERSARIAL
