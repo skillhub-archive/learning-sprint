@@ -204,6 +204,13 @@ rule 1 (unpack before use) applied to the environment itself. Learned when a SQL
 Session 1 named the tools but a true beginner did not know how to obtain or open one,
 the same class of gap as assuming a pre-existing account or install.
 
+**Set the grader flags before writing any drill.** Each session starts with the
+`caseFold` and `parenLabels` check in `references/workbook-template.md` Part 2: scan
+what this session's transcripts will print around each answer token, decide both
+flags, and record the decision and the reason in the track's build notes. Do this
+without being asked; the user should never have to tell you to opt in or out. The
+grader gate catches a wrong call afterwards, but it is the backstop, not the step.
+
 Build sessions **on demand, not all at once** (keeps each artifact focused and lets
 the learner give feedback on the format early). After building the first session,
 explicitly ask the user to try it and confirm the format before mass-producing the

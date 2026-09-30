@@ -69,26 +69,37 @@ always reveal *why*.
   change it HERE and fix the pointers, never fork the spec). Give each drill an
   explicit `type` and grade through one shared `gradeDrill(d, val)`:
   - `count` and `value` (a single result, or "which is first") match exactly via the
-    normalizer: trim, strip trailing `[.;:]+`, and, when `caseFold` is on (below),
-    lowercase both sides.
+    normalizer: trim, strip one pair of quotes wrapping the WHOLE answer, strip
+    trailing `[.;:]+`, and, when `caseFold` is on (below), lowercase both sides.
+    When `parenLabels` is on (below), `matchesOne` also drops parentheses wrapping
+    the whole answer on this path, never inside `norm()` itself.
   - `set` (all results, any order) and `seq` (results in order) tokenize both sides
     with `toks(s) = s.toLowerCase().trim().split(/[\s,.;:"'‘’“”]+/).filter(Boolean)`
-    then compare sorted (set) or in order (seq).
+    (plus `()` in the class when `parenLabels` is on) then compare sorted (set) or in
+    order (seq).
   - **The punctuation in that character class is load-bearing, and it is the single most
     repeated fairness bug in this engine's history.** The rule: **whatever punctuation a
     subject prints AROUND an answer token belongs in this split class, and belongs in the
-    grader harness as a test case.** Two instances, both found by a reviewer rather than by
-    the author, both in the same two drills, two days apart:
+    grader harness as a test case.** Three instances, none of them caught by the author who
+    wrote the drill:
     - **the colon** (2026-09-08, API track). An HTTP header list prints
       `content-type: application/json`, so a learner copying the names as shown answers
       `content-type:, etag:` and every token carries a trailing colon.
     - **quotes** (2026-09-10, API track). JSON field names print as `"userId"`, so the same
       learner answers `"userId", "id"` and every token carries quotes. Curly quotes are in
       the class too, because a word processor or chat client substitutes them silently.
+    - **parentheses** (2026-09-30, git track, found by `check-grader.js`).
+      `git log --decorate` prints branch names as `(feature)`, a rejected push ends
+      `(fetch first)`, and `git remote -v` prints `(fetch)`. Unlike the colon and
+      quotes this one is a per-subject flag, `parenLabels` (below), because in other
+      subjects parentheses carry meaning.
 
-    `norm()` strips this punctuation already, so `count`/`value` answers were always safe
-    and every `set`/`seq` answer was not: the `set` and `seq` branches never reach `norm()`.
-    **That asymmetry is why this keeps recurring, so check `toks()` specifically when
+    `norm()` strips a trailing colon and wrapping straight quotes, so `count`/`value`
+    answers were protected from the colon and quote cases while every `set`/`seq` answer
+    was not, since the `set` and `seq` branches never reach `norm()`. It was never
+    complete protection: the single-answer paren case failed too, and curly quotes
+    wrapping a `value` answer are still not stripped. **That asymmetry is why this keeps
+    recurring, so check `toks()` specifically when
     porting an older session, and do not assume a green harness settles it** (see the
     harness warning below).
   - **An optional `alt` array holds other accepted SPELLINGS of the same answer.** Compare
@@ -152,6 +163,24 @@ always reveal *why*.
     learner who types `true`). The `set`/`seq` token path always folds case (it
     compares result *names*, where case is presentation); the flag governs only
     `count`/`value`.
+  - **`parenLabels` is a per-session decision, same pattern as `caseFold`.** Turn it
+    ON when the session's own transcripts print answer tokens wrapped in parentheses
+    as LABELS (git: `(feature)` in `git log --decorate`, `(fetch first)`, `(fetch)`).
+    ON means two things: `()` joins the `toks()` split class, and `matchesOne` drops
+    parentheses wrapping the whole answer on the `count`/`value` path. Leave it OFF
+    when parentheses carry meaning in answers (Python tuples and calls, SQL `IN (...)`,
+    PowerShell subexpressions): with `()` in the split class, `(1, 2), (3, 4)` grades
+    the same as `(1, 2, 3), (4)`, which accepts a wrong answer. **Never** put the
+    paren strip in `norm()`: faded blanks share `norm()`, and `git (fetch)` typed into
+    a command blank is a syntax error the grader must reject.
+  - **Set both flags BEFORE writing a session's drills, not after a gate fails.** The
+    check, per session: (1) is this subject case-insensitive in its answers
+    (`caseFold`)? (2) scan the transcripts this session will print for every answer
+    token and list the punctuation wrapping it; if any token is wrapped in `( )` as a
+    label and no answer uses parentheses for grouping, `parenLabels` is ON. Record both
+    decisions, with the reason, in the session's build notes or the track's
+    shared build contract. `check-grader.js` still runs afterwards and catches a wrong
+    call, but it is the backstop, not the decision.
   Ask `value` when one result comes back, `set` when several do, `count` only when
   the count is the lesson, `seq` only when the result has a defined order. Also vary
   the **cognitive task**, not just the answer type: ramp from reading one whole

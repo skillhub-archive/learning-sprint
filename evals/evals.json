@@ -75,6 +75,9 @@
           "text": "Makes the caseFold grading decision explicitly for SQL (case-insensitive matching on value/count answers per the canonical grader contract), rather than silently inheriting exact-case"
         },
         {
+          "text": "Makes the parenLabels decision explicitly before writing drills (OFF for SQL, since parentheses carry meaning in answers such as IN (...) lists), rather than leaving it to a gate failure"
+        },
+        {
           "text": "No Python Tutor 'watch it run' link for SQL"
         },
         {

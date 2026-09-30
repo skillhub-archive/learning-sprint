@@ -48,7 +48,7 @@ The general form of every part, and how it maps across domains:
     task (read a whole result, operate on a subset, read one group, combine steps),
     not one shape repeated; see rule 23 in `editorial-rules.md` for the why and
     `workbook-template.md` Part 2 for the canonical grader contract (including the
-    per-subject `caseFold` decision).
+    per-subject `caseFold` and per-session `parenLabels` decisions).
 
 - **Part 3 "Arrange & fill"** = *order the steps / fill the gap* (the reading→doing
   bridge).

@@ -2,6 +2,16 @@
 
 All notable changes to this skill, newest first.
 
+## 2026-09-30 (grader flags are decided before building, and parentheses become one)
+
+The first full sweep of the grader gate after a three-week break found parentheses to be the third instance of the "punctuation wrapping an answer token" class, on the git track. No rule-count change (still 28).
+
+- **New per-session grader flag, `parenLabels`**, in the canonical contract (`workbook-template.md` Part 2), alongside `caseFold`. ON adds `()` to the `toks()` split class and drops whole-answer parentheses on the `count`/`value` path in `matchesOne`. It is a flag rather than a contract-wide change because an adversarial reviewer proved the contract-wide version accepts wrong answers where parentheses carry meaning: with `()` in the split class, `(1, 2), (3, 4)` grades the same as `(1, 2, 3), (4)`. Python, SQL and PowerShell leave it OFF.
+- **The paren strip never goes in `norm()`.** Faded blanks share `norm()`, and the first git fix put it there, so `git (fetch)` and `git branch (-v)` were accepted in command blanks: shell syntax errors. Same principle as the Python S6 decision the same day: rejecting invalid code in a code blank is the grader being right.
+- **SKILL.md Step 4 now requires setting both flags before writing any drill**, from a scan of what the session's transcripts print around each answer token, with the decision recorded in the track's build notes. The author's direction: nobody should ever have to tell the builder to opt in or out; the gate is the backstop, not the decision. `evals.json` gained a matching assertion on the SQL eval (OFF for SQL).
+- **Corrected a false sentence** in the contract that said `norm()` made `count`/`value` answers "always safe". It protected them from the colon and straight-quote cases only; the single-answer paren case failed, and curly quotes wrapping a `value` answer are still not stripped (recorded as a known gap, not fixed).
+- **`check-grader.js` (hosting toolkit, not the skill) gained two faded-blank exemptions**, each counted before and after across all 51 files to prove it skips only its target: punctuation that ENDS the blank's line (after dropping a trailing comment), limited to trailing wrappers on the last blank of a line after the reviewer proved the unlimited version hid real cases; and whole-fill parentheses, since output like `git remote -v`'s `(fetch)` is never typed into a command.
+
 ## 2026-09-10 (rule 7 gets a procedure, rule 15 stops being a list)
 
 Rule 7 was the only fairness rule with no way to check it, and it shipped three defects in four days (the colon, quotes, and `alt` unreachable for `set`/`seq`). It now points at one. No rule-count change (still 28).
