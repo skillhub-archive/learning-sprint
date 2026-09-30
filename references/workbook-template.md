@@ -69,8 +69,9 @@ always reveal *why*.
   change it HERE and fix the pointers, never fork the spec). Give each drill an
   explicit `type` and grade through one shared `gradeDrill(d, val)`:
   - `count` and `value` (a single result, or "which is first") match exactly via the
-    normalizer: trim, strip one pair of quotes wrapping the WHOLE answer, strip
-    trailing `[.;:]+`, and, when `caseFold` is on (below), lowercase both sides.
+    normalizer: trim, strip one pair of quotes (straight `"` `'` or curly `“ ”` `‘ ’`)
+    wrapping the WHOLE answer, strip trailing `[.;:]+`, and, when `caseFold` is on
+    (below), lowercase both sides.
     When `parenLabels` is on (below), `matchesOne` also drops parentheses wrapping
     the whole answer on this path, never inside `norm()` itself.
   - `set` (all results, any order) and `seq` (results in order) tokenize both sides
@@ -97,8 +98,12 @@ always reveal *why*.
     `norm()` strips a trailing colon and wrapping straight quotes, so `count`/`value`
     answers were protected from the colon and quote cases while every `set`/`seq` answer
     was not, since the `set` and `seq` branches never reach `norm()`. It was never
-    complete protection: the single-answer paren case failed too, and curly quotes
-    wrapping a `value` answer are still not stripped. **That asymmetry is why this keeps
+    complete protection: the single-answer paren case failed too, and before 2026-09-30
+    `norm()` stripped straight quotes only, so a device that auto-curls quotes (iOS, some
+    macOS setups) could fail a quoted `value` answer. The curly pair is now part of the
+    contract; **sessions shipped before that date still strip straight quotes only**, left
+    as-is deliberately because no page prints a curly-quoted answer, so bring `norm()` up to
+    the contract whenever one of them is next edited. **That asymmetry is why this keeps
     recurring, so check `toks()` specifically when
     porting an older session, and do not assume a green harness settles it** (see the
     harness warning below).
