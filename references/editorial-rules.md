@@ -72,7 +72,7 @@ is compliant**, and until now nothing said which rules it actually covered.
 
 - **A gate checks these (often only part of the rule; see each rule's own note):**
   7 and the answer-type half of 23 (`check-grader.js`), 9 (`check-quiz.py`: option
-  length and position, not the shuffle itself), 10, 13, 14, 20, 25, 26
+  length, not the shuffle itself), 10, 13, 14, 15, 20, 25, 26
   (`check-structure.js`: 10 and 13 confirm the mechanism exists, 20 covers Check buttons
   only, 25 matches two known phrasings, "ask Claude to build" and "ask for Session N", so
   any other wording still needs a read), the persistence half of 22 (`verify-restore.js`, which proves restore runs
@@ -83,9 +83,9 @@ is compliant**, and until now nothing said which rules it actually covered.
   trace every graded item, both with an independent adversarial reviewer), 28 (compute
   the contrast ratio for each text token against each surface it is painted on).
 - **No procedure exists. A person must read for these, and no gate will ever tell you
-  they are broken:** 1, 2, 3, 4, 5, 6, 8, 11, 12, 15, 16, 17, 21, 27. (Rule 15 describes a
-  check, but no gate implements it.) Plus the ungated halves of otherwise-gated rules: the
-  counter half of 22 and the cognitive-task half of 23. The rule-18 reviewer's
+  they are broken:** 1, 2, 3, 4, 5, 6, 8, 11, 12, 16, 17, 21, 27. Plus the ungated halves
+  of otherwise-gated rules: the counter half of 22, the cognitive-task half of 23, and the
+  one-valid-answer clause of 7 for Parsons and faded items (a reviewer read). The rule-18 reviewer's
   re-read is the only coverage most of these get, so it is not optional.
 
 Rule 8 sits in that last group deliberately. `check-grader.js` emits a shortlist of
@@ -156,6 +156,16 @@ The gate closes the class those defects came from. It does not close rule 7, and
 `ask` that names the accepted spelling is still the better fix when an answer has
 several honest forms.
 
+**Part 3 has exactly one right answer per item, so the item must genuinely have only
+one.** The Parsons engine compares the exact joined order and a faded blank has no `alt`
+list, so a learner who produces a second correct order or a second correct fill is marked
+wrong. Every Parsons item must have exactly one valid order: each line must depend on the
+one before it (a real dependency, not an arbitrary sequence), and the prompt must narrate
+the steps in order so no other arrangement matches the description. Every faded blank must
+have exactly one valid fill, or the prompt must name the form it wants. When a second
+order or fill is legitimate, rewrite the item; do not teach the grader to accept both.
+The rule-18 reviewer checks each Parsons and faded item for alternate valid answers.
+
 **8. A placeholder or hint must NEVER contain the answer.** (The `e.g. 20 15` bug,
 where the example input *was* the expected output.) The recurring offender is an
 inline code *comment* in a faded or Parsons snippet that names the very token being
@@ -177,8 +187,13 @@ option A" bug.)
 **Shuffling fixes position, not length.** The correct option drifts into being the
 longest one, because it is the one carrying the caveat, and then "pick the longest"
 passes the quiz without knowing anything. `check-quiz.py` scores both heuristics and
-fails a session that either one beats; aim for the correct option sitting mid-pack on
-length, not at an extreme. Do not aim at 0 on one heuristic alone: driving the correct
+fails a session where the correct option is the longest on more than one question, or
+the shortest on more than one (tightened 2026-09-30 from "fails only when a heuristic
+alone reaches the pass mark", which let quizzes ship at 3 of 6). Aim for the correct
+option sitting mid-pack on length, not at an extreme: at least one distractor clearly
+shorter and one clearly longer. Trim the correct option's caveats into the explanation
+rather than padding distractors with filler, and keep every distractor plausible and
+unambiguously wrong. Do not aim at 0 on one heuristic alone: driving the correct
 answer to always-shortest is the same exploit inverted.
 
 **10. When a learner gets something wrong, link them back to the EXACT source
@@ -212,6 +227,8 @@ hash anchors reload the iframe and wipe in-memory progress.
 the exact characters to type, a ligated glyph is actively wrong (a learner would
 try to type `≠`). The source stays ASCII and the font does the transforming, so a
 grep for the glyphs finds nothing: you must set the CSS, not search-and-replace.
+`check-structure.js` fails any session that lacks the declaration on all five (added
+2026-09-30).
 
 **Declare it once on `body`, never as a list of mono selectors.** Both properties
 are INHERITED, so one declaration on `body` reaches every element on the page. The

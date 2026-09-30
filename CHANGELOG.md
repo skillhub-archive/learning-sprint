@@ -2,6 +2,17 @@
 
 All notable changes to this skill, newest first.
 
+## 2026-09-30 (decisions pass: fairer Part 3, honest quizzes, two new gate checks)
+
+Follow-up decisions from the audit, each verified in the files and re-checked by an independent reviewer. No rule-count change (still 28).
+
+- **Rule 7 gains a Part 3 clause**: every Parsons item has exactly one valid order and every faded blank exactly one valid fill (or the prompt names the form), because the engine accepts one answer. Fix a second valid answer in the content, never by widening the grader. An audit of the Python and SQL tracks found 22 items with a genuine second answer. The reviewer then caught five of the fixes naming their own blank outright, so the rule's companion is rule 8: name the FORM (a keyword, the placeholder this session teaches), never the token.
+- **Faded blanks are graded by a dedicated `fadedOk`, not `norm()`**, because a blank is code and quotes are part of the answer: bare `name` was being accepted for the string key `"name"` (a NameError in real Python). Documented in the template's faded bullet.
+- **Rule 9 tightened**: `check-quiz.py` now fails when the correct option is the longest on more than one question, or the shortest on more than one. The old line (fail only when a length heuristic alone reaches the pass mark) had let nearly every Python and SQL quiz ship with the correct answer longest on 3 of 6. Guidance added: trim the correct option into its explanation rather than padding distractors. The rebalance also surfaced two outright answer-key errors, now fixed.
+- **Rule 15 is now gated**: `check-structure.js` fails a session without the ligature declaration on body and the four form controls.
+- **Grader status recorded**: SQL now meets the full contract; Python stays a documented legacy engine, strict on punctuation by design. Curly quotes anywhere in an answer now count as straight on both tracks. A same-day attempt to stop stripping a period after a digit was reverted by review: SQLite prints `3.0`, never `3.`, so it only made `30.` fail for `30`.
+- **domain-adaptation.md**: the word-order and recipe-step suggestions now warn that the engine accepts one order.
+
 ## 2026-09-30 (audit pass: what the rules claim versus what the gates and engine do)
 
 A full audit of the skill against the shipped engine and the author-side gates. No rule-count change (still 28). Each item below was verified against the files, then checked by an independent reviewer.

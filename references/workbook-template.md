@@ -107,10 +107,11 @@ always reveal *why*.
     contract; **sessions shipped before that date still strip straight quotes only**, left
     as-is deliberately because no page prints a curly-quoted answer, so bring `norm()` up to
     the contract whenever that session's GRADER code is next edited (a copy or colour edit
-    elsewhere in the file does not count). The Python and SQL tracks' graders predate more
-    of the contract than this (no trailing-punctuation strip; Python has no typed drills at
-    all), so **never clone a Python or SQL session as a grader template**; clone the newest
-    API or Git session instead. **That asymmetry is why this keeps
+    elsewhere in the file does not count). As of 2026-09-30 every shipped session strips
+    curly quotes, and SQL meets the full contract. **Python is a documented legacy engine**:
+    exact-match drills with no `type` or `alt`, deliberately no trailing-punctuation strip
+    (its drills predict exact program output, where `Done.` and `Done` differ). **Never clone
+    a Python session as a grader template**; clone the newest API or Git session instead. **That asymmetry is why this keeps
     recurring, so check `toks()` specifically when
     porting an older session, and do not assume a green harness settles it** (see the
     harness warning below).
@@ -183,8 +184,9 @@ always reveal *why*.
     when parentheses carry meaning in answers (Python tuples and calls, SQL `IN (...)`,
     PowerShell subexpressions): with `()` in the split class, `(1, 2), (3, 4)` grades
     the same as `(1, 2, 3), (4)`, which accepts a wrong answer. **Never** put the
-    paren strip in `norm()`: faded blanks share `norm()`, and `git (fetch)` typed into
-    a command blank is a syntax error the grader must reject.
+    paren strip in `norm()`: faded blanks on older engines share `norm()` (newer sessions
+    grade blanks with `fadedOk`, below), and `git (fetch)` typed into a command blank is a
+    syntax error the grader must reject.
   - **Set both flags BEFORE writing a session's drills, not after a gate fails.** The
     check, per session: (1) is this subject case-insensitive in its answers
     (`caseFold`)? (2) scan the transcripts this session will print for every answer
@@ -241,7 +243,18 @@ unassisted). Two sub-types:
   (rule 20).
 - **Faded / fill-in-the-blank:** near-complete code (or formula/sentence) with a
   few blanks as inline inputs. Disable **Check** until every blank is filled
-  (rule 20). Check each blank; reveal answers.
+  (rule 20). Check each blank; reveal answers. **Grade blanks with a dedicated
+  `fadedOk(f, i, val)`, not `norm()`**: a blank is CODE, so quotes are part of the
+  answer (in `job[%%]` the key `"name"` is a string and bare `name` is a NameError;
+  in `(%%,)` the key `target` is a variable and `"target"` is a string). `fadedOk`
+  keeps quotes significant, maps curly quotes to straight, and otherwise follows the
+  session's `norm()` rules (its `caseFold` and punctuation settings). In Python, `'`
+  and `"` make the same string, so treat them as equal; in SQL they differ (a
+  string versus an identifier), so do not; compare only a MATCHED outer pair, so `"name'` stays a
+  syntax error. Ignore spaces next to brackets and commas (`{ name }`, `(100, )` are valid).
+  A case-insensitive track that embeds another language's code (SQL sessions writing
+  Python sqlite3 calls) marks those items `cs: true` so their case stays exact.
+  Write every quoted key WITH its quotes.
 
 **Both Part 3 sub-types PERSIST (rule 22).** They are graded practices, so a reload
 must not wipe them, even though neither gets a progress-strip counter. Persist on

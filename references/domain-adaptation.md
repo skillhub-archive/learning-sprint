@@ -58,8 +58,12 @@ The general form of every part, and how it maps across domains:
   - Code: Parsons (reorder scrambled lines); faded (fill blanks in a snippet).
   - Excel: order the steps of a pivot/lookup; fill the missing function name/arg.
   - Language: reorder scrambled words into a correct sentence; fill the missing
-    particle/ending (this is literally how language apps scaffold).
-  - Cooking: put recipe steps in order; fill the missing quantity/temperature.
+    particle/ending (this is literally how language apps scaffold). Pick sentences whose
+    word order is fixed; many languages allow several correct orders, and the engine
+    accepts only one (see the Part 3 clause of rule 7).
+  - Cooking: put recipe steps in order where each step truly depends on the one before
+    (you cannot fold in what you have not whisked); fill the missing
+    quantity/temperature. Skip steps that could happen in either order.
   - Chess: order the moves of a known opening; fill the missing move in a mate
     pattern.
 
