@@ -525,6 +525,15 @@ passed:
   `1fr`); switch the whole sprint to a single full-width column only when its tiles
   will actually overflow (long-query subjects like SQL), never as a blanket default.
 
+- **A browser dialog fails silently in the artifact viewer.** The claude.ai viewer never
+  shows `alert`, `confirm` or `prompt`: `confirm` answers false at once and `prompt`
+  answers null, so a control guarded by one does nothing in the artifact while working
+  perfectly on a hosted site. Four Hub reset buttons shipped dead this way (found
+  2026-10-01). Ask inside the page instead: every Hub now uses the same two-tap reset
+  (the first tap arms the button for four seconds, a second tap clears), and a
+  session's whole-session reset clears at once, like every per-part reset.
+  `check-js.js` fails any page that calls one.
+
 Belt-and-suspenders for both: actually open or refresh the published artifact and
 confirm the interactive parts render before calling the session done.
 

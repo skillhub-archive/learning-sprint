@@ -2,6 +2,13 @@
 
 All notable changes to this skill, newest first.
 
+## 2026-10-01 (rule 24: no browser dialogs)
+
+No rule-count change (still 28).
+
+- **Rule 24 gains a bullet: a browser dialog fails silently in the artifact viewer.** The claude.ai viewer never shows `alert`, `confirm` or `prompt` (`confirm` answers false at once), so a control guarded by one does nothing in the artifact while working on the hosted site. Four Hub reset buttons shipped dead this way. Ask inside the page instead: every Hub now uses the same two-tap reset, and a session's whole-session reset clears at once like its per-part resets.
+- **The gate now catches it**: `check-js.js` fails any page that calls one of the three. Run across every track it flagged exactly the known cases and passed the other 59 pages.
+
 ## 2026-09-30 (decisions pass: fairer Part 3, honest quizzes, two new gate checks)
 
 Follow-up decisions from the audit, each verified in the files and re-checked by an independent reviewer. No rule-count change (still 28).
