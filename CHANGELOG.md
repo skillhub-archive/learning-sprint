@@ -2,6 +2,14 @@
 
 All notable changes to this skill, newest first.
 
+## 2026-10-06 (color-scheme in every palette block; no sideways scroll on phones)
+
+No rule-count change (still 28).
+
+- **workbook-template.md, Build / QA notes: nothing may make the page scroll sideways on a phone** (check at 360px and 320px). A sweep found 15 of 51 hosted pages doing it, from long URLs and hashes in prose and quiz questions, a long part title beside its reset button, and plain `1fr` grid tracks (the Python Parsons columns and the Hub hero). The bullet names the four CSS rules that fix it; all were applied to every session and Hub the same day, and a layout comparison at 1280px showed they moved nothing that already fit.
+- **workbook-template.md, Build / QA notes**: each of the four palette blocks now declares its own `color-scheme` (light in `:root` and `[data-theme="light"]`, dark in the `prefers-color-scheme` block and `[data-theme="dark"]`). Without it native controls and scrollbars stayed light in dark mode on every track. Applied family-wide to every page and source the same day; gate 7 (`check-structure.js`) now fails a page missing any of the four.
+- **No on-page theme button in an artifact**, also noted there: the claude.ai viewer sets `data-theme` itself. The hosted site's theme toggle, added the same day, is a hosting concern, so it lives in the separate hosting tooling, not in this skill.
+
 ## 2026-10-01 (rule 24: no browser dialogs)
 
 No rule-count change (still 28).

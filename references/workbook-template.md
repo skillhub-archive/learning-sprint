@@ -406,14 +406,26 @@ LAST session ships that copy is stale and must be swapped to completed-state wor
 
 ## Build / QA notes
 
-- Self-contained: inline CSS/JS, no CDNs. Theme-aware (light/dark tokens). Respect
-  `prefers-reduced-motion`. Focus-visible states. `overflow-x:auto` on code blocks.
+- Self-contained: inline CSS/JS, no CDNs. Theme-aware (light/dark tokens), and each of the
+  four palette blocks declares its own `color-scheme` (light in `:root` and
+  `[data-theme="light"]`, dark in the `prefers-color-scheme` block and `[data-theme="dark"]`)
+  so native controls and scrollbars follow the theme; gate 7 fails a page without all
+  four. Do not add an on-page theme button: the artifact viewer sets `data-theme` itself.
+  Respect `prefers-reduced-motion`. Focus-visible states. `overflow-x:auto` on code blocks.
 - Escape all user-facing dynamic strings before injecting as HTML.
 - **Keep code-example lines short enough not to trigger a horizontal scrollbar**
   within the session's column width. A long statement plus a padded trailing
   `-> result` comment overflows easily; put a long result annotation on its own line
   (or split the statement across lines) rather than padding it out to the right. A
   quick check: flag any `<pre>` line over ~100 visible characters.
+- **Nothing may make the PAGE scroll sideways on a phone (check at 360px and 320px).**
+  A code block scrolling inside its own box is fine; the page scrolling is not. Four
+  CSS rules cover the causes found across 15 pages on 2026-10-06: `overflow-wrap:
+  anywhere` on inline `code` (a URL or hash in a sentence has no break point), `overflow-wrap:
+  break-word` on `body` (the same URL in plain text, such as a quiz question),
+  `flex-wrap: wrap` on the part header row (a long title plus its reset button), and
+  `minmax(0, ...)` on every grid track that holds code (a plain `1fr` track cannot shrink
+  below its longest line). None of them changes the layout where the content already fits.
 - **Title-case section and part headers** (e.g. "Learn & Do", "Predict the Output",
   "Arrange & Fill", "Write It Yourself", "Rapid Recall", "Quick Check"; on the Hub,
   "The Five Levels" / "Top 5 Resources"), so the Hub and sessions read consistently.
