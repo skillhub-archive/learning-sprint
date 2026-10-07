@@ -449,6 +449,11 @@ LAST session ships that copy is stale and must be swapped to completed-state wor
   `--surface*`/`--bg`/`--border` (chrome), `--good*`/`--bad*` (feedback). Font
   roles are `--mono` (a real code/monospace stack) and `--sans` (a system UI stack);
   no webfonts (the sandbox blocks them).
+- **Keep the light-mode `--surface` off pure `#FFFFFF`.** Make it a pale tint of the
+  track's own hue, one step lighter than `--bg`, with `--bg` a step darker to keep the
+  separation, so cards read as paper rather than glare (e.g. bg `#F4F1EB` / surface
+  `#FCFAF6`). Darkening the ground costs contrast, so re-check rule 28 on the result;
+  the `--gold` text token is usually the first to dip under 4.5:1.
 
 ## The QA gate (do this before calling a session "done")
 

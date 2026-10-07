@@ -2,6 +2,12 @@
 
 All notable changes to this skill, newest first.
 
+## 2026-10-07 (light-mode cards off pure white)
+
+No rule-count change (still 28).
+
+- **workbook-template.md, palette tokens: keep the light-mode `--surface` off pure `#FFFFFF`.** Pure-white cards on a tinted page read as glare. Make the surface a pale tint of the track hue one step lighter than `--bg`, darken `--bg` a step to keep the separation, and re-check rule 28: `--gold` is the token most likely to dip under 4.5:1. Guidance, not a gate rule. Applied to every hosted page the same day.
+
 ## 2026-10-06 (color-scheme in every palette block; no sideways scroll on phones)
 
 No rule-count change (still 28).
