@@ -77,11 +77,13 @@ is compliant**, and until now nothing said which rules it actually covered.
   only, 25 matches two known phrasings, "ask Claude to build" and "ask for Session N", so
   any other wording still needs a read), the persistence half of 22 (`verify-restore.js`, which proves restore runs
   without throwing, not that saved state visibly returns), 24 (`scan_js.py`, `check-js.js`,
-  `verify-session.js`, plus opening the page). The tooling lives beside this skill rather than inside it,
+  `verify-session.js`, plus opening the page; `check-structure.js` covers the flashcard's
+  keyboard access, not every control). The tooling lives beside this skill rather than inside it,
   because the skill ships rules and the gates are author-side.
 - **A procedure exists, but a person performs it:** 18 and 19 (run every snippet, and
   trace every graded item, both with an independent adversarial reviewer), 28 (compute
-  the contrast ratio for each text token against each surface it is painted on).
+  the contrast ratio for each text token against each surface it is painted on; only two
+  clauses are gated, by `check-structure.js`: no opacity on text, and no literal text colour).
 - **No procedure exists. A person must read for these, and no gate will ever tell you
   they are broken:** 1, 2, 3, 4, 5, 6, 8, 11, 12, 16, 17, 21, 27. Plus the ungated halves
   of otherwise-gated rules: the counter half of 22, the cognitive-task half of 23, and the
@@ -195,6 +197,20 @@ shorter and one clearly longer. Trim the correct option's caveats into the expla
 rather than padding distractors with filler, and keep every distractor plausible and
 unambiguously wrong. Do not aim at 0 on one heuristic alone: driving the correct
 answer to always-shortest is the same exploit inverted.
+
+**Capping the extremes is not enough: vary the correct answer's rank.** The longest/shortest
+cap pushed authors to park the correct answer in the SECOND-longest slot, with a padded
+distractor above it, almost every time. A survey on 2026-10-09 found the longest option was
+a distractor on 280 of 309 questions across all five hosted tracks, and on 25 of 50 pages
+"always pick the second-longest" reached the pass mark (one comprehensive final scored 10/10
+that way), while every one of those pages passed the old gate. `check-quiz.py` now plays
+every length-only strategy (pick any set of length ranks, guess among them) and fails a page
+whose best strategy expects more than **40%** of the questions right (pure guessing is 25%).
+Meeting it honestly means the correct answer sits at different ranks across the quiz,
+including the longest on one question and the shortest on another. Balance by rewording
+options, not by changing what a question tests, and compute the ranks by hand: the gate
+reports the best strategy, but the fix is a judgement about which option can be trimmed or
+extended without becoming implausible.
 
 **10. When a learner gets something wrong, link them back to the EXACT source
 concept** via a deep link, not "go review Part 1."
@@ -439,7 +455,12 @@ Persistence covers all seven. The counter strip covers five of them, deliberatel
   and Import are a secondary convenience on the hosted site, never the mechanism that
   makes progress durable. Drills persist their correctness and restore through a
   shared `markDone(ok)` helper (compute correct, then persist, then mark, so
-  live-check and restore share one path). Cards persist a mastered-index set and are
+  live-check and restore share one path). **"Exactly what they left" includes what they
+  typed:** a drill's answer is saved with its verdict and a write-it's draft on every
+  keystroke, each in its own map beside the verdicts, so older saved states still load.
+  Until 2026-10-17 both came back empty on every track while the verdicts and marks
+  restored, which looks like persistence until you reload after a wrong answer and can no
+  longer see what you wrote. Cards persist a mastered-index set and are
   filtered out of the pile on reload. The quiz persists per-question correctness and
   restores by replaying a synthetic click through the page's OWN answer handler
   (which sidesteps the fact that the backlink and final-message code diverges between
@@ -534,6 +555,17 @@ passed:
   session's whole-session reset clears at once, like every per-part reset.
   `check-js.js` fails any page that calls one.
 
+- **"Works in the browser" includes working from the keyboard.** Anything a learner clicks
+  must also be reachable with Tab and operable with Enter or Space. Native buttons, inputs
+  and links are, for free; anything built from a `<div>` or `<span>` with a click handler is
+  not, and nothing about it looks wrong with a mouse. The Part 5 flashcard shipped exactly
+  that way on all 55 sessions of five tracks (Tab skipped it, so a keyboard or screen-reader
+  learner could not do Part 5 at all) until 2026-10-17. Prefer a real `<button>`; where a
+  `<div>` is the right shape, give it `role="button" tabindex="0"`, a keydown handler and a
+  visible `:focus-visible` outline. `check-structure.js` fails a flashcard missing any of
+  those, and a quick test for the rest: anything with a pointer cursor that cannot take focus
+  is a mouse-only control.
+
 Belt-and-suspenders for both: actually open or refresh the published artifact and
 confirm the interactive parts render before calling the session done.
 
@@ -615,7 +647,20 @@ error fills). Four things make this fail quietly:
   legible as text on a pale background simultaneously darkens the ground under any dark
   on-colour text, so a fix in one place opens a failure in another. Re-audit the pairs
   after every token change. A real instance went from 4.07 to **2.44** this way, caught
-  only because the pairs were re-checked before publishing.
+  only because the pairs were re-checked before publishing. **That on-colour must be a
+  palette token, never a literal like `#fff`:** a literal cannot follow the fill when the
+  theme flips. Two tracks' sessions shipped white on `--accent` and `--good`, fine in
+  light mode and 3.05-3.24:1 in dark, where those fills turn light; their own Hubs
+  already had the `--on-accent` token the sessions lacked. `check-structure.js` now fails
+  any text colour that is not a `var(--...)` (found and fixed 2026-10-17).
+- **Never fade text with `opacity`.** Opacity blends the text into whatever is behind it,
+  so a token that clears 4.5:1 on its own renders under it, and a ratio computed from the
+  token pair never notices. To make text recede, give it a fainter token that has itself
+  been checked. Opacity is fine on a disabled control (WCAG exempts inactive controls) and
+  on anything that paints no text. Found 2026-10-17 by measuring rendered pages: the
+  header's MILESTONE flag (opacity .85) and the Hub's level numbers (.8) were at
+  3.45-3.80:1 in light mode on five tracks, with every audit green. `check-structure.js`
+  now fails any text rule with opacity below 1.
 
 **The semantic half of this rule matters as much as the arithmetic.** A palette's faintest
 token exists for text that is *meant* to recede: uppercase micro-labels, counters, a

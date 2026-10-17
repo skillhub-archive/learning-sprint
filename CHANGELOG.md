@@ -2,6 +2,30 @@
 
 All notable changes to this skill, newest first.
 
+## 2026-10-17 (rule 24: keyboard access; the flashcard)
+
+No rule-count change (still 28).
+
+- **editorial-rules.md, rule 24: "works in the browser" includes working from the keyboard.** The Part 5 flashcard is a `<div>` that listened only for clicks, so Tab skipped it and a keyboard or screen-reader learner could not do Part 5, on all 55 sessions of five tracks. **workbook-template.md, Part 5** now specifies `role="button" tabindex="0"`, Enter/Space to flip, `aria-live` on the text, a `:focus-visible` outline, and focus handed to "Got it" and back. Applied the same day (`tools\learning-hub-hosting\patch_flashcard_keyboard.py`); `check-structure.js` fails a flashcard missing any of it.
+
+## 2026-10-17 (rule 28: text on a fill uses a palette token, never a literal)
+
+No rule-count change (still 28).
+
+- **editorial-rules.md, rule 28, the on-colour bullet:** the paired on-colour must be a palette token. The python and sql sessions painted `color: #fff` on `--accent` (Part tags, Check/Reveal) and `--good` (Marked done): 6.62:1 in light, 3.05-3.24:1 in dark. Their Hubs already defined `--on-accent`; the sessions got it in all four palette blocks (`tools\learning-hub-hosting\patch_on_accent_python_sql.py`, 22 pages). `check-structure.js` now fails any text colour that is not a `var(--...)`. No exemptions were needed: every other text rule on the site already used a token.
+
+## 2026-10-17 (rule 22: keep what the learner typed)
+
+No rule-count change (still 28).
+
+- **editorial-rules.md, rule 22, and workbook-template.md (Parts 2 and 4): typed text persists, not just verdicts.** A drill's answer is saved on Check into `state.drillText` and refilled on restore. A write-it's draft is saved on every keystroke into `state.writeText`, refilled on load, and re-enables Reveal if not yet revealed. The part resets clear both. Separate maps, so a state saved before the change loads unchanged. A real-browser pass found both boxes empty after a reload on all 55 sessions of five tracks, while verdicts and marks restored; applied to all of them the same day (`tools\learning-hub-hosting\patch_save_typed_answers.py`). Export and Import carry the text with no change, since they copy the whole store.
+
+## 2026-10-17 (rule 28: never fade text with opacity)
+
+No rule-count change (still 28).
+
+- **editorial-rules.md, rule 28: new bullet, never fade text with `opacity`.** It blends text into its background, so a token pair that passes can render under 4.5:1, and a pair audit never sees it. A rendered-page measurement found the MILESTONE flag (opacity .85) and the Hub level numbers (.8) at 3.45-3.80:1 in light mode on every hosted track. Removed from all 61 sources and site pages the same day (`tools\learning-hub-hosting\patch_text_opacity.py`). `check-structure.js` now fails a text rule with opacity below 1, exempting disabled controls, the quiz's dimmed options and non-text selectors. The "which of these a machine can check" list now says this one clause of rule 28 is gated.
+
 ## 2026-10-07 (light-mode cards off pure white)
 
 No rule-count change (still 28).

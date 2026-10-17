@@ -63,7 +63,9 @@ always reveal *why*.
 - ~10 items, progressively harder. The **Check button is disabled until the input
   has content** (rule 20; also guard the Enter-key path), and each drill's
   correctness **persists and restores on reload** through a shared `markDone(ok)`
-  helper, feeding the Drills-correct counter.
+  helper, feeding the Drills-correct counter. **The typed answer persists with it**
+  (saved on Check into a separate `state.drillText` map, refilled before `markDone` on
+  restore), so after a reload a learner still sees what they wrote beside the verdict.
 - **Vary the answer TYPE; do not default every drill to a count.** This bullet is
   the CANONICAL grader contract (rule 23 in `editorial-rules.md` holds the why;
   `domain-adaptation.md` shows per-subject drill flavors; if you change the grader,
@@ -284,8 +286,11 @@ The self-grade is a **reversible, persisted** mark, not a one-shot cosmetic labe
 counter in the progress strip, and can be tapped again to undo (label it so, e.g.
 "✓ Marked done (tap to undo)"); a marked item shows a visible done state (a subtle
 card treatment) and restores it on reload. The editor box **stays editable** after
-marking (the learner owns their self-assessment). "Needs another pass" clears any
-mark and refocuses the editor. Never make the button claim something it doesn't do
+marking (the learner owns their self-assessment). **The draft in the editor persists
+too:** save it to a separate `state.writeText` map on every `input`, refill it on load,
+and if a refilled draft has not been revealed yet, re-enable Reveal (rule 20's gate is
+"has content", and it has). The Part 4 reset clears the drafts with the marks.
+"Needs another pass" clears any mark and refocuses the editor. Never make the button claim something it doesn't do
 (a label like "✓ logged" that persists nothing is the exact failure the self-tracking
 rule forbids), and never half-commit (disabling the button while leaving the answer
 editable, or vice versa).
@@ -297,6 +302,12 @@ A deck of prompt→answer cards for the atoms the learner should summon instantl
 again"** sends it to the back of the pile so it loops until automatic. Track
 mastered/pile counts, feeding the Cards-mastered counter. Mastered cards **persist
 as an index set** and are filtered out of the pile on reload. Reset button.
+
+**The card must work from the keyboard.** It is a `<div>`, which a browser never focuses on
+its own, so give it `role="button" tabindex="0"`, flip it on Enter and Space as well as on
+click, mark its text `aria-live="polite"` so a screen reader hears the answer, and give it a
+`:focus-visible` outline. A flip moves focus to "Got it", and a choice made from those buttons
+returns focus to the card, since re-rendering hides the buttons. Rule 24 has the why.
 
 **Deck size FLOATS, it is not a locked count, and it is capped.** Subjects differ, and
 so does how many genuine atoms a given level holds, so forcing every session in every
