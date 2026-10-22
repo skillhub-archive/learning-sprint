@@ -2,6 +2,12 @@
 
 All notable changes to this skill, newest first.
 
+## 2026-10-21 (rule 13: auto-graded items lock by design)
+
+No rule-count change (still 28).
+
+- **editorial-rules.md, rule 13 records why checked items lock.** Drills, Parsons, fill-in and quiz items lock once checked, with the per-part reset as the only redo. That was always the behaviour but never written down, so Patrick (taking Python S1) had to ask whether it was deliberate. It now is, on record: the reveal shows the answer, so a per-item retry tests copying, and the part reset sends the learner back through the earlier items. Write-its keep their per-item undo. No page changes.
+
 ## 2026-10-17 (rule 24: keyboard access; the flashcard)
 
 No rule-count change (still 28).

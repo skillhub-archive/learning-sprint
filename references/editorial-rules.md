@@ -228,6 +228,12 @@ original scrambled slot in the bank, not appended to the end.
 **13. Offer granular per-part resets in addition to a whole-session reset.** Build
 each exercise as a re-callable function and have the global reset compose the
 per-part ones. "Reset" must clear ALL interactive state, not a subset.
+Do NOT add per-item retries to auto-graded items (drills, Parsons, fill-in, quiz):
+once checked, an item locks, and the per-part reset is the only redo. This is
+deliberate (Patrick, 2026-10-21): the reveal shows the answer, so an instant retry
+tests copying rather than recall, and resetting the whole part sends the learner
+back through the earlier items to confirm they understand them. Self-graded
+write-its keep their per-item undo.
 
 **14. In a sandboxed artifact, in-page navigation must use JS
 `element.scrollIntoView()` with `preventDefault()`, never raw `#hash` anchors** —
